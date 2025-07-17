@@ -1,0 +1,403 @@
+---
+title: "REST API"
+category: "Concepts"
+description: "Estilo arquitectónico para diseñar servicios web basado en principios REST"
+difficulty: "Intermedio"
+tags: ["api", "architecture", "web-services"]
+---
+
+# REST API
+
+**REST API** (Representational State Transfer) es un estilo arquitectónico para diseñar servicios web que utiliza HTTP de manera estandardizada.
+
+## ¿Qué es REST?
+
+REST es un conjunto de principios arquitectónicos:
+
+- **Stateless**: Sin estado entre peticiones
+- **Cliente-Servidor**: Separación de responsabilidades
+- **Cacheable**: Respuestas pueden ser cacheadas
+- **Uniform Interface**: Interfaz uniforme
+- **Layered System**: Sistema en capas
+- **Code on Demand**: Código bajo demanda (opcional)
+
+## Principios REST
+
+### 1. Recursos
+Todo en REST es un **recurso** identificado por una URL:
+
+```
+Usuarios:     /api/usuarios
+Usuario:      /api/usuarios/123
+Posts:        /api/usuarios/123/posts
+Post:         /api/usuarios/123/posts/456
+```
+
+### 2. Métodos HTTP
+Usar métodos HTTP para diferentes acciones:
+
+```
+GET     → Leer/Obtener
+POST    → Crear
+PUT     → Actualizar completo
+PATCH   → Actualizar parcial
+DELETE  → Eliminar
+```
+
+### 3. Representaciones
+Los recursos se representan en diferentes formatos:
+
+```
+JSON    → application/json
+XML     → application/xml
+HTML    → text/html
+```
+
+### 4. Sin Estado
+Cada petición debe contener toda la información necesaria:
+
+```http
+# ✓ Bueno: Incluye autenticación
+GET /api/usuarios/123 HTTP/1.1
+Authorization: Bearer token123
+
+# ✗ Malo: Depende del estado de sesión
+GET /api/usuarios/123 HTTP/1.1
+# Asume que ya se inició sesión
+```
+
+## Diseño de URLs REST
+
+### Estructura Básica
+
+```
+# Colección de recursos
+GET    /api/usuarios              # Listar usuarios
+POST   /api/usuarios              # Crear usuario
+
+# Recurso individual
+GET    /api/usuarios/123          # Obtener usuario 123
+PUT    /api/usuarios/123          # Actualizar usuario 123
+PATCH  /api/usuarios/123          # Actualizar parcialmente
+DELETE /api/usuarios/123          # Eliminar usuario 123
+```
+
+### Recursos Anidados
+
+```
+# Posts de un usuario
+GET    /api/usuarios/123/posts    # Posts del usuario 123
+POST   /api/usuarios/123/posts    # Crear post para usuario 123
+
+# Post específico
+GET    /api/usuarios/123/posts/456  # Post 456 del usuario 123
+PUT    /api/usuarios/123/posts/456  # Actualizar post 456
+DELETE /api/usuarios/123/posts/456  # Eliminar post 456
+```
+
+### Parámetros de Consulta
+
+```
+# Filtrado
+GET /api/usuarios?activo=true
+GET /api/usuarios?rol=admin
+
+# Paginación
+GET /api/usuarios?page=2&limit=10
+GET /api/usuarios?offset=20&limit=10
+
+# Ordenamiento
+GET /api/usuarios?sort=nombre&order=asc
+GET /api/usuarios?sort=-fechaCreacion  # - para descendente
+
+# Búsqueda
+GET /api/usuarios?q=juan
+GET /api/usuarios?search=desarrollador
+
+# Inclusión de relaciones
+GET /api/usuarios/123?include=posts,profile
+
+# Selección de campos
+GET /api/usuarios?fields=id,nombre,email
+```
+
+## Ejemplos de API REST
+
+### Obtener Lista de Usuarios
+
+**Petición:**
+```http
+GET /api/usuarios?page=1&limit=5 HTTP/1.1
+Host: api.example.com
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1Q...
+```
+
+**Respuesta:**
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Total-Count: 150
+X-Page: 1
+X-Per-Page: 5
+
+{
+  "data": [
+    {
+      "id": 1,
+      "nombre": "Ana García",
+      "email": "ana@example.com",
+      "fechaCreacion": "2023-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "nombre": "Carlos López",
+      "email": "carlos@example.com",
+      "fechaCreacion": "2023-01-16T14:22:00Z"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "perPage": 5,
+    "total": 150,
+    "totalPages": 30
+  },
+  "links": {
+    "self": "/api/usuarios?page=1&limit=5",
+    "next": "/api/usuarios?page=2&limit=5",
+    "last": "/api/usuarios?page=30&limit=5"
+  }
+}
+```
+
+### Crear Usuario
+
+**Petición:**
+```http
+POST /api/usuarios HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1Q...
+
+{
+  "nombre": "Juan Pérez",
+  "email": "juan@example.com",
+  "password": "secreto123",
+  "rol": "usuario"
+}
+```
+
+**Respuesta:**
+```http
+HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /api/usuarios/151
+
+{
+  "id": 151,
+  "nombre": "Juan Pérez",
+  "email": "juan@example.com",
+  "rol": "usuario",
+  "fechaCreacion": "2023-07-27T12:28:53Z",
+  "fechaActualizacion": "2023-07-27T12:28:53Z"
+}
+```
+
+### Actualizar Usuario
+
+**Petición:**
+```http
+PATCH /api/usuarios/151 HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1Q...
+
+{
+  "nombre": "Juan Pérez Actualizado"
+}
+```
+
+**Respuesta:**
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 151,
+  "nombre": "Juan Pérez Actualizado",
+  "email": "juan@example.com",
+  "rol": "usuario",
+  "fechaCreacion": "2023-07-27T12:28:53Z",
+  "fechaActualizacion": "2023-07-27T13:45:12Z"
+}
+```
+
+### Manejo de Errores
+
+**Usuario No Encontrado:**
+```http
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+  "error": {
+    "code": "USER_NOT_FOUND",
+    "message": "El usuario con ID 999 no existe",
+    "details": {
+      "resource": "usuarios",
+      "id": 999
+    }
+  }
+}
+```
+
+**Error de Validación:**
+```http
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json
+
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Los datos proporcionados no son válidos",
+    "fields": {
+      "email": ["El email ya está en uso"],
+      "password": ["La contraseña debe tener al menos 8 caracteres"]
+    }
+  }
+}
+```
+
+## Versionado de APIs
+
+### En la URL
+```
+GET /api/v1/usuarios
+GET /api/v2/usuarios
+```
+
+### En Headers
+```http
+GET /api/usuarios HTTP/1.1
+API-Version: 2
+# o
+Accept: application/vnd.api+json;version=2
+```
+
+### En Parámetros
+```
+GET /api/usuarios?version=2
+```
+
+## Autenticación y Autorización
+
+### JWT Token
+```http
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+```
+
+### API Key
+```http
+X-API-Key: tu-api-key-secreta
+# o en parámetros
+GET /api/usuarios?api_key=tu-api-key
+```
+
+### OAuth 2.0
+```http
+Authorization: Bearer oauth-access-token
+```
+
+## Mejores Prácticas
+
+### 1. Usar Sustantivos, No Verbos
+```
+✓ GET /api/usuarios
+✗ GET /api/obtenerUsuarios
+
+✓ POST /api/usuarios
+✗ POST /api/crearUsuario
+```
+
+### 2. Plurales para Colecciones
+```
+✓ /api/usuarios
+✗ /api/usuario
+```
+
+### 3. Estructura Consistente
+```json
+{
+  "data": { /* contenido principal */ },
+  "meta": { /* metadata */ },
+  "links": { /* enlaces de navegación */ },
+  "included": { /* recursos relacionados */ }
+}
+```
+
+### 4. Códigos de Estado Apropiados
+```
+200 OK          → Éxito general
+201 Created     → Recurso creado
+204 No Content  → Éxito sin contenido
+400 Bad Request → Petición inválida
+401 Unauthorized → No autenticado
+403 Forbidden   → No autorizado
+404 Not Found   → Recurso no encontrado
+422 Unprocessable Entity → Error de validación
+500 Internal Server Error → Error del servidor
+```
+
+### 5. Filtrado y Paginación
+```
+# Filtros
+GET /api/productos?categoria=electronica&precio_min=100
+
+# Paginación
+GET /api/productos?page=2&per_page=20
+
+# Ordenamiento
+GET /api/productos?sort=precio&order=desc
+```
+
+### 6. HATEOAS (Hypermedia as the Engine of Application State)
+```json
+{
+  "id": 123,
+  "nombre": "Juan Pérez",
+  "links": {
+    "self": "/api/usuarios/123",
+    "posts": "/api/usuarios/123/posts",
+    "profile": "/api/usuarios/123/profile"
+  }
+}
+```
+
+## Herramientas para APIs REST
+
+### Desarrollo
+- **Postman**: Testing de APIs
+- **Insomnia**: Cliente REST
+- **Swagger/OpenAPI**: Documentación
+- **JSONPlaceholder**: API de prueba
+
+### Testing
+- **Newman**: Postman en CLI
+- **REST Assured**: Testing en Java
+- **SuperTest**: Testing en Node.js
+- **Pytest**: Testing en Python
+
+### Documentación
+- **Swagger UI**: Interfaz interactiva
+- **Redoc**: Documentación estática
+- **API Blueprint**: Markdown para APIs
+- **Postman Docs**: Documentación automática
+
+## Relacionado
+
+- [HTTP](/concepts/http) - Protocolo base
+- [JSON](/concepts/json) - Formato de datos
+- [API](/general/api) - Concepto general
+- [GraphQL](/concepts/graphql) - Alternativa a REST
+- [Authentication](/concepts/authentication) - Autenticación
+- [CORS](/concepts/cors) - Políticas de origen

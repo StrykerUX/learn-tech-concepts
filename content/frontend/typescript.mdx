@@ -1,0 +1,114 @@
+---
+title: "TypeScript"
+category: "Frontend"
+description: "Superconjunto de JavaScript que añade tipado estático para un desarrollo más robusto"
+difficulty: "Intermedio"
+tags: ["types", "javascript", "programming"]
+---
+
+# TypeScript
+
+**TypeScript** es un superconjunto de JavaScript desarrollado por Microsoft que añade tipado estático opcional.
+
+## ¿Qué es TypeScript?
+
+TypeScript extiende JavaScript agregando:
+
+- **Tipado estático**: Detecta errores en tiempo de desarrollo
+- **Autocompletado**: Mejor experiencia de desarrollo
+- **Refactoring seguro**: Cambios con mayor confianza
+- **Documentación viva**: Los tipos sirven como documentación
+
+## Tipos Básicos
+
+```typescript
+// Tipos primitivos
+let nombre: string = "Ana";
+let edad: number = 25;
+let activo: boolean = true;
+
+// Arrays
+let numeros: number[] = [1, 2, 3];
+let nombres: Array<string> = ["Juan", "María"];
+
+// Objetos
+interface Persona {
+  nombre: string;
+  edad: number;
+  email?: string; // Opcional
+}
+
+const usuario: Persona = {
+  nombre: "Carlos",
+  edad: 30
+};
+```
+
+## Interfaces y Tipos
+
+```typescript
+// Interface
+interface Usuario {
+  id: number;
+  nombre: string;
+  roles: string[];
+}
+
+// Type alias
+type Estado = "pendiente" | "completado" | "cancelado";
+
+// Generics
+interface Respuesta<T> {
+  data: T;
+  mensaje: string;
+  exito: boolean;
+}
+```
+
+## Funciones Tipadas
+
+```typescript
+// Función con tipos
+function sumar(a: number, b: number): number {
+  return a + b;
+}
+
+// Arrow function
+const multiplicar = (x: number, y: number): number => x * y;
+
+// Función con parámetros opcionales
+function saludar(nombre: string, apellido?: string): string {
+  return apellido ? `Hola ${nombre} ${apellido}` : `Hola ${nombre}`;
+}
+```
+
+## Ventajas del Tipado
+
+1. **Detección temprana de errores**
+2. **Mejor autocompletado en IDEs**
+3. **Refactoring más seguro**
+4. **Documentación implícita**
+5. **Mejor colaboración en equipo**
+
+## Compilación
+
+TypeScript se compila a JavaScript:
+
+```bash
+# Instalar TypeScript
+npm install -g typescript
+
+# Compilar archivo
+tsc archivo.ts
+
+# Modo watch
+tsc --watch archivo.ts
+```
+
+## Relacionado
+
+- [JavaScript](/frontend/javascript) - Base de TypeScript
+- [React](/frontend/react) - Se puede usar con TypeScript
+- [Next.js](/frontend/nextjs) - Soporte nativo para TypeScript
+- [Node.js](/backend/nodejs) - TypeScript en el backend
+- [Interfaces](/programming/interfaces) - Definición de contratos

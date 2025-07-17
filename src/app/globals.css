@@ -2,27 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Solo forzar modo claro sin romper Tailwind */
-html {
-  color-scheme: light;
-}
-
-/* Override dark mode solo para el fondo principal */
+/* Solo arreglar el fondo negro - mantener todo lo demás igual */
 @media (prefers-color-scheme: dark) {
   html,
   body {
-    background-color: #f9fafb;
-    color: #111827;
+    background-color: #f9fafb !important;
+    color: #111827 !important;
   }
-}
-
-/* Estilos para código */
-pre {
-  background-color: #1f2937;
-  color: #f9fafb;
-}
-
-code:not(pre code) {
-  background-color: #f3f4f6;
-  color: #374151;
+  
+  /* Asegurar que elementos específicos no tengan fondo oscuro */
+  main,
+  article,
+  section {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
 }

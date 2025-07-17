@@ -1,0 +1,85 @@
+---
+title: "JavaScript"
+category: "Frontend"
+description: "Lenguaje de programación que añade interactividad y dinámica a las páginas web"
+difficulty: "Intermedio"
+tags: ["programming", "interactivity", "web"]
+---
+
+# JavaScript
+
+**JavaScript** es un lenguaje de programación que permite crear contenido dinámico e interactivo en las páginas web.
+
+## ¿Qué es JavaScript?
+
+JavaScript es el lenguaje de programación de la web. Permite:
+
+- **Interactividad**: Responder a clicks, formularios, etc.
+- **Manipulación del DOM**: Cambiar contenido dinámicamente
+- **Comunicación**: Hacer peticiones a servidores
+- **Animaciones**: Crear efectos visuales
+- **Validación**: Verificar datos antes de enviarlos
+
+## Conceptos Fundamentales
+
+### Variables
+```javascript
+let nombre = "Juan";
+const edad = 25;
+var mensaje = "Hola mundo";
+```
+
+### Funciones
+```javascript
+function saludar(nombre) {
+  return `Hola, ${nombre}!`;
+}
+
+const sumar = (a, b) => a + b;
+```
+
+### Objetos
+```javascript
+const persona = {
+  nombre: "Ana",
+  edad: 30,
+  saludar() {
+    console.log(`Hola, soy ${this.nombre}`);
+  }
+};
+```
+
+## DOM (Document Object Model)
+
+Permite manipular elementos HTML:
+
+```javascript
+// Seleccionar elementos
+const titulo = document.getElementById('titulo');
+const botones = document.querySelectorAll('.boton');
+
+// Modificar contenido
+titulo.textContent = 'Nuevo título';
+
+// Añadir eventos
+boton.addEventListener('click', function() {
+  alert('¡Botón clickeado!');
+});
+```
+
+## ES6+ (JavaScript Moderno)
+
+- **Arrow Functions**: `() => {}`
+- **Template Literals**: `` `Hola ${nombre}` ``
+- **Destructuring**: `const {x, y} = objeto`
+- **Modules**: `import/export`
+- **Promises/Async-Await**: Programación asíncrona
+
+## Relacionado
+
+- [HTML](/frontend/html) - Estructura
+- [CSS](/frontend/css) - Estilos
+- [TypeScript](/frontend/typescript) - JavaScript tipado
+- [React](/frontend/react) - Librería de JavaScript
+- [Node.js](/backend/nodejs) - JavaScript en el servidor
+- [DOM](/frontend/dom) - Manipulación de elementos

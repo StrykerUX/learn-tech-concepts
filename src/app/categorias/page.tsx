@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllTerms } from '@/lib/content'
+import { getAllTerms, getTermUrl } from '@/lib/content'
 
 export default function CategoriasPage() {
   const allTerms = getAllTerms()
@@ -11,7 +11,7 @@ export default function CategoriasPage() {
       icon: '💻',
       color: 'bg-blue-50 border-blue-200 text-blue-800',
       description: 'Tecnologías del lado del cliente como React, HTML, CSS',
-      terms: allTerms.filter(t => t.metadata.category === 'frontend')
+      terms: allTerms.filter(t => t.filePath.startsWith('/frontend/'))
     },
     {
       name: 'UX/UI',
@@ -19,7 +19,7 @@ export default function CategoriasPage() {
       icon: '🎨',
       color: 'bg-purple-50 border-purple-200 text-purple-800',
       description: 'Diseño de experiencia e interfaz de usuario',
-      terms: allTerms.filter(t => t.metadata.category === 'ux-ui')
+      terms: allTerms.filter(t => t.filePath.startsWith('/ux-ui/'))
     },
     {
       name: 'Backend',
@@ -27,7 +27,7 @@ export default function CategoriasPage() {
       icon: '⚙️',
       color: 'bg-green-50 border-green-200 text-green-800',
       description: 'Tecnologías del lado del servidor y APIs',
-      terms: allTerms.filter(t => t.metadata.category === 'backend')
+      terms: allTerms.filter(t => t.filePath.startsWith('/backend/'))
     },
     {
       name: 'General',
@@ -35,7 +35,23 @@ export default function CategoriasPage() {
       icon: '📚',
       color: 'bg-orange-50 border-orange-200 text-orange-800',
       description: 'Conceptos generales de tecnología y desarrollo',
-      terms: allTerms.filter(t => t.metadata.category === 'general')
+      terms: allTerms.filter(t => t.filePath.startsWith('/general/'))
+    },
+    {
+      name: 'Herramientas',
+      slug: 'herramientas',
+      icon: '🔧',
+      color: 'bg-gray-50 border-gray-200 text-gray-800',
+      description: 'Herramientas de desarrollo como Git, Docker, editores',
+      terms: allTerms.filter(t => t.filePath.startsWith('/tools/'))
+    },
+    {
+      name: 'Conceptos',
+      slug: 'conceptos',
+      icon: '💡',
+      color: 'bg-indigo-50 border-indigo-200 text-indigo-800',
+      description: 'Conceptos fundamentales de programación y protocolos web',
+      terms: allTerms.filter(t => t.filePath.startsWith('/concepts/'))
     }
   ]
 
@@ -69,19 +85,19 @@ export default function CategoriasPage() {
                     {category.terms.slice(0, 6).map((term) => (
                       <Link
                         key={term.slug}
-                        href={`/terminos${term.filePath}`}
+                        href={getTermUrl(term.filePath)}
                         className="block p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <h3 className="font-medium text-gray-900 mb-1">{term.metadata.title}</h3>
                         <div className="flex items-center text-xs text-gray-500 space-x-2">
                           <span className={`px-2 py-1 rounded-full ${
-                            term.metadata.difficulty === 'facil' ? 'bg-green-100 text-green-800' :
-                            term.metadata.difficulty === 'intermedio' ? 'bg-yellow-100 text-yellow-800' :
+                            term.metadata.difficulty === 'Principiante' ? 'bg-green-100 text-green-800' :
+                            term.metadata.difficulty === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-red-100 text-red-800'
                           }`}>
                             {term.metadata.difficulty}
                           </span>
-                          <span>⏱️ {term.metadata.tiempo_lectura} min</span>
+                          <span>⏱️ {term.metadata.tiempo_lectura || 5} min</span>
                         </div>
                       </Link>
                     ))}

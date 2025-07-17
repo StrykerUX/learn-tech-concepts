@@ -1,0 +1,445 @@
+---
+title: "JSON (JavaScript Object Notation)"
+category: "Concepts"
+description: "Formato ligero de intercambio de datos basado en texto y fácil de leer"
+difficulty: "Principiante"
+tags: ["data-format", "api", "serialization"]
+---
+
+# JSON (JavaScript Object Notation)
+
+**JSON** es un formato ligero de intercambio de datos que es fácil de leer y escribir para humanos, y fácil de parsear y generar para máquinas.
+
+## ¿Qué es JSON?
+
+JSON se caracteriza por:
+
+- **Basado en texto**: Formato de texto plano
+- **Independiente del lenguaje**: Usado en casi todos los lenguajes
+- **Sintaxis simple**: Basado en JavaScript pero universal
+- **Ligero**: Mínimo overhead
+- **Legible**: Fácil de leer por humanos
+
+## Sintaxis JSON
+
+### Tipos de Datos
+
+```json
+{
+  "string": "Texto entre comillas dobles",
+  "number": 42,
+  "decimal": 3.14159,
+  "boolean": true,
+  "null": null,
+  "array": [1, 2, 3, "cuatro"],
+  "object": {
+    "anidado": "valor",
+    "numero": 123
+  }
+}
+```
+
+### Reglas de Sintaxis
+
+1. **Datos en pares nombre/valor**
+2. **Separados por comas**
+3. **Objetos entre llaves `{}`**
+4. **Arrays entre corchetes `[]`**
+5. **Strings entre comillas dobles**
+6. **No comentarios permitidos**
+
+## Estructura de Objetos
+
+### Objeto Simple
+```json
+{
+  "nombre": "Juan Pérez",
+  "edad": 30,
+  "activo": true
+}
+```
+
+### Objeto Complejo
+```json
+{
+  "usuario": {
+    "id": 123,
+    "informacionPersonal": {
+      "nombre": "Ana",
+      "apellido": "García",
+      "edad": 28,
+      "email": "ana@example.com"
+    },
+    "direccion": {
+      "calle": "Calle Principal 123",
+      "ciudad": "Madrid",
+      "codigoPostal": "28001",
+      "pais": "España"
+    },
+    "preferencias": {
+      "idioma": "es",
+      "tema": "oscuro",
+      "notificaciones": true
+    },
+    "hobbies": ["lectura", "programación", "viajes"],
+    "redesSociales": {
+      "twitter": "@ana_garcia",
+      "linkedin": "ana-garcia-dev",
+      "github": "ana-garcia"
+    },
+    "fechaRegistro": "2023-01-15T10:30:00Z",
+    "ultimoAcceso": "2023-07-27T14:22:33Z"
+  }
+}
+```
+
+### Arrays
+```json
+{
+  "numeros": [1, 2, 3, 4, 5],
+  "strings": ["uno", "dos", "tres"],
+  "mixed": [1, "dos", true, null],
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Juan"
+    },
+    {
+      "id": 2,
+      "nombre": "Ana"
+    }
+  ],
+  "matriz": [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ]
+}
+```
+
+## Ejemplos de Uso
+
+### API Response
+```json
+{
+  "status": "success",
+  "data": {
+    "usuarios": [
+      {
+        "id": 1,
+        "nombre": "Juan Pérez",
+        "email": "juan@example.com",
+        "rol": "admin",
+        "activo": true,
+        "fechaCreacion": "2023-01-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "nombre": "Ana García",
+        "email": "ana@example.com",
+        "rol": "usuario",
+        "activo": true,
+        "fechaCreacion": "2023-02-20T15:45:00Z"
+      }
+    ]
+  },
+  "meta": {
+    "total": 150,
+    "page": 1,
+    "perPage": 2,
+    "totalPages": 75
+  },
+  "links": {
+    "self": "/api/usuarios?page=1",
+    "next": "/api/usuarios?page=2",
+    "last": "/api/usuarios?page=75"
+  }
+}
+```
+
+### Configuración
+```json
+{
+  "app": {
+    "name": "Mi Aplicación",
+    "version": "1.2.3",
+    "debug": false,
+    "url": "https://miapp.com"
+  },
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "name": "mi_db",
+    "ssl": true
+  },
+  "cache": {
+    "driver": "redis",
+    "ttl": 3600,
+    "prefix": "app_cache:"
+  },
+  "mail": {
+    "driver": "smtp",
+    "host": "smtp.example.com",
+    "port": 587,
+    "encryption": "tls"
+  }
+}
+```
+
+## Trabajar con JSON en Diferentes Lenguajes
+
+### JavaScript
+```javascript
+// Parsear JSON
+const jsonString = '{"nombre": "Juan", "edad": 30}';
+const objeto = JSON.parse(jsonString);
+console.log(objeto.nombre); // "Juan"
+
+// Convertir a JSON
+const objeto = { nombre: "Ana", edad: 25 };
+const jsonString = JSON.stringify(objeto);
+console.log(jsonString); // '{"nombre":"Ana","edad":25}'
+
+// Con formato bonito
+const jsonFormatted = JSON.stringify(objeto, null, 2);
+/*
+{
+  "nombre": "Ana",
+  "edad": 25
+}
+*/
+```
+
+### Python
+```python
+import json
+
+# Parsear JSON
+json_string = '{"nombre": "Juan", "edad": 30}'
+objeto = json.loads(json_string)
+print(objeto["nombre"])  # "Juan"
+
+# Convertir a JSON
+objeto = {"nombre": "Ana", "edad": 25}
+json_string = json.dumps(objeto)
+print(json_string)  # '{"nombre": "Ana", "edad": 25}'
+
+# Con formato bonito
+json_formatted = json.dumps(objeto, indent=2, ensure_ascii=False)
+```
+
+### Node.js
+```javascript
+const fs = require('fs');
+
+// Leer archivo JSON
+const data = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
+// Escribir archivo JSON
+const config = {
+  host: 'localhost',
+  port: 3000
+};
+fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+
+// Asíncrono
+fs.readFile('data.json', 'utf8', (err, data) => {
+  if (err) throw err;
+  const objeto = JSON.parse(data);
+  console.log(objeto);
+});
+```
+
+### PHP
+```php
+// Decodificar JSON
+$json_string = '{"nombre": "Juan", "edad": 30}';
+$objeto = json_decode($json_string, true); // true para array asociativo
+echo $objeto['nombre']; // "Juan"
+
+// Codificar a JSON
+$objeto = array('nombre' => 'Ana', 'edad' => 25);
+$json_string = json_encode($objeto);
+echo $json_string; // '{"nombre":"Ana","edad":25}'
+
+// Con formato bonito
+$json_formatted = json_encode($objeto, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+```
+
+## Validación JSON
+
+### JSON Schema
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "nombre": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "edad": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 150
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "hobbies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  },
+  "required": ["nombre", "edad", "email"],
+  "additionalProperties": false
+}
+```
+
+## Buenas Prácticas
+
+### 1. Naming Conventions
+```json
+{
+  "camelCase": "Recomendado para JavaScript",
+  "snake_case": "Común en Python/Ruby",
+  "kebab-case": "Evitar en JSON",
+  "PascalCase": "Solo para tipos/clases"
+}
+```
+
+### 2. Estructura Consistente
+```json
+{
+  "data": {
+    /* Contenido principal */
+  },
+  "meta": {
+    "timestamp": "2023-07-27T12:00:00Z",
+    "version": "1.0"
+  },
+  "errors": [
+    /* Array de errores si los hay */
+  ]
+}
+```
+
+### 3. Manejo de Fechas
+```json
+{
+  "fechaISO": "2023-07-27T12:00:00Z",
+  "fechaUnix": 1690459200,
+  "fechaFormateada": "27/07/2023 12:00"
+}
+```
+
+### 4. Evitar Valores Indefinidos
+```json
+{
+  "bueno": {
+    "valor": null,
+    "opcional": "presente si tiene valor"
+  },
+  "malo": {
+    "valor": undefined,  // ✗ No válido en JSON
+    "opcional": ""       // ✓ Mejor usar null o omitir
+  }
+}
+```
+
+## Herramientas JSON
+
+### Validadores Online
+- **JSONLint**: Validador de sintaxis
+- **JSON Schema Validator**: Validación con schema
+- **JSON Formatter**: Formatear y validar
+
+### Editores
+- **VSCode**: Extensiones JSON
+- **JSONView**: Extensión de browser
+- **Postman**: Editor integrado
+- **Insomnia**: Cliente REST con JSON
+
+### Librerías de Validación
+- **Joi** (Node.js): Validación de schemas
+- **Ajv** (JavaScript): JSON Schema validator
+- **Cerberus** (Python): Validación de documentos
+- **JSON Schema** (PHP): Validación PHP
+
+## Limitaciones de JSON
+
+### 1. No Soporta Comentarios
+```json
+{
+  "valor": 123,
+  // "comentario": "Esto no es válido"
+  "_comentario": "Workaround usando propiedades"
+}
+```
+
+### 2. Tipos Limitados
+```json
+{
+  "fecha": "2023-07-27T12:00:00Z",  // String, no Date
+  "funcion": "no se puede representar",
+  "undefined": null,  // Se convierte a null
+  "bigint": "1234567890123456789"  // String para números grandes
+}
+```
+
+### 3. Referencias Circulares
+```javascript
+// Esto causará error en JSON.stringify()
+const obj = { name: "test" };
+obj.self = obj;
+
+// Solución: usar replacer
+JSON.stringify(obj, (key, value) => {
+  if (key === 'self') return '[Circular]';
+  return value;
+});
+```
+
+## Alternativas a JSON
+
+### YAML
+```yaml
+nombre: Juan Pérez
+edad: 30
+hobbies:
+  - programación
+  - lectura
+```
+
+### TOML
+```toml
+nombre = "Juan Pérez"
+edad = 30
+hobbies = ["programación", "lectura"]
+```
+
+### XML
+```xml
+<usuario>
+  <nombre>Juan Pérez</nombre>
+  <edad>30</edad>
+  <hobbies>
+    <hobby>programación</hobby>
+    <hobby>lectura</hobby>
+  </hobbies>
+</usuario>
+```
+
+## Relacionado
+
+- [REST API](/concepts/rest-api) - APIs que usan JSON
+- [JavaScript](/frontend/javascript) - Origen de JSON
+- [HTTP](/concepts/http) - Protocolo que transporta JSON
+- [API](/general/api) - Intercambio de datos
+- [XML](/concepts/xml) - Formato alternativo
+- [YAML](/concepts/yaml) - Formato más legible

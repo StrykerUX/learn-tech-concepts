@@ -1,0 +1,337 @@
+---
+title: "HTTP (HyperText Transfer Protocol)"
+category: "Concepts"
+description: "Protocolo de comunicación que define cómo se transfieren datos en la web"
+difficulty: "Intermedio"
+tags: ["protocol", "web", "communication"]
+---
+
+# HTTP (HyperText Transfer Protocol)
+
+**HTTP** es el protocolo de comunicación que define cómo se intercambian mensajes entre clientes y servidores en la World Wide Web.
+
+## ¿Qué es HTTP?
+
+HTTP es un protocolo:
+
+- **Sin estado**: Cada petición es independiente
+- **Cliente-Servidor**: Arquitectura de solicitud-respuesta
+- **Basado en texto**: Mensajes legibles por humanos
+- **Flexible**: Puede transportar cualquier tipo de dato
+- **Cacheable**: Permite almacenamiento temporal
+
+## Estructura de una Petición HTTP
+
+```http
+GET /api/usuarios HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Accept: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9
+Content-Type: application/json
+
+{
+  "filtro": "activos",
+  "limite": 10
+}
+```
+
+### Partes de la Petición
+
+1. **Línea de petición**: Método + URL + Versión
+2. **Headers**: Metadatos de la petición
+3. **Cuerpo**: Datos opcionales (en POST, PUT, etc.)
+
+## Métodos HTTP
+
+### GET
+```http
+GET /api/usuarios/123 HTTP/1.1
+Host: api.example.com
+```
+- **Propósito**: Obtener datos
+- **Idempotente**: Sí
+- **Cacheable**: Sí
+- **Cuerpo**: No
+
+### POST
+```http
+POST /api/usuarios HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez",
+  "email": "juan@example.com"
+}
+```
+- **Propósito**: Crear recursos
+- **Idempotente**: No
+- **Cacheable**: No
+- **Cuerpo**: Sí
+
+### PUT
+```http
+PUT /api/usuarios/123 HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{
+  "nombre": "Juan Pérez Actualizado",
+  "email": "juan.nuevo@example.com"
+}
+```
+- **Propósito**: Actualizar/crear recurso completo
+- **Idempotente**: Sí
+- **Cacheable**: No
+- **Cuerpo**: Sí
+
+### PATCH
+```http
+PATCH /api/usuarios/123 HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+
+{
+  "email": "nuevo@example.com"
+}
+```
+- **Propósito**: Actualizar parcialmente
+- **Idempotente**: No necesariamente
+- **Cacheable**: No
+- **Cuerpo**: Sí
+
+### DELETE
+```http
+DELETE /api/usuarios/123 HTTP/1.1
+Host: api.example.com
+```
+- **Propósito**: Eliminar recurso
+- **Idempotente**: Sí
+- **Cacheable**: No
+- **Cuerpo**: No generalmente
+
+### HEAD
+```http
+HEAD /api/usuarios/123 HTTP/1.1
+Host: api.example.com
+```
+- **Propósito**: Obtener solo headers (como GET pero sin cuerpo)
+- **Idempotente**: Sí
+- **Cacheable**: Sí
+- **Cuerpo**: No
+
+### OPTIONS
+```http
+OPTIONS /api/usuarios HTTP/1.1
+Host: api.example.com
+```
+- **Propósito**: Obtener métodos permitidos
+- **Usado para**: CORS preflight
+
+## Estructura de una Respuesta HTTP
+
+```http
+HTTP/1.1 200 OK
+Date: Mon, 27 Jul 2023 12:28:53 GMT
+Server: Apache/2.4.41
+Content-Type: application/json; charset=UTF-8
+Content-Length: 348
+Cache-Control: max-age=3600
+Access-Control-Allow-Origin: *
+
+{
+  "id": 123,
+  "nombre": "Juan Pérez",
+  "email": "juan@example.com",
+  "fechaCreacion": "2023-01-15T10:30:00Z"
+}
+```
+
+### Partes de la Respuesta
+
+1. **Línea de estado**: Versión + Código + Mensaje
+2. **Headers**: Metadatos de la respuesta
+3. **Cuerpo**: Datos de respuesta
+
+## Códigos de Estado HTTP
+
+### 1xx - Informacional
+- **100 Continue**: El servidor recibió la petición inicial
+- **101 Switching Protocols**: Cambio de protocolo
+
+### 2xx - Éxito
+- **200 OK**: Petición exitosa
+- **201 Created**: Recurso creado exitosamente
+- **204 No Content**: Éxito sin contenido
+- **206 Partial Content**: Contenido parcial
+
+### 3xx - Redirección
+- **301 Moved Permanently**: Recurso movido permanentemente
+- **302 Found**: Redirección temporal
+- **304 Not Modified**: Recurso no modificado (cache)
+- **307 Temporary Redirect**: Redirección temporal manteniendo método
+
+### 4xx - Error del Cliente
+- **400 Bad Request**: Petición mal formada
+- **401 Unauthorized**: Autenticación requerida
+- **403 Forbidden**: Acceso denegado
+- **404 Not Found**: Recurso no encontrado
+- **405 Method Not Allowed**: Método no permitido
+- **409 Conflict**: Conflicto con el estado actual
+- **422 Unprocessable Entity**: Entidad no procesable
+- **429 Too Many Requests**: Demasiadas peticiones
+
+### 5xx - Error del Servidor
+- **500 Internal Server Error**: Error interno del servidor
+- **501 Not Implemented**: Funcionalidad no implementada
+- **502 Bad Gateway**: Gateway erróneo
+- **503 Service Unavailable**: Servicio no disponible
+- **504 Gateway Timeout**: Timeout del gateway
+
+## Headers HTTP Importantes
+
+### Headers de Petición
+
+```http
+# Identificación
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Host: example.com
+
+# Contenido
+Content-Type: application/json
+Content-Length: 348
+Content-Encoding: gzip
+
+# Autenticación
+Authorization: Bearer token123
+Cookie: sessionId=abc123; userId=456
+
+# Negociación de contenido
+Accept: application/json, text/html
+Accept-Language: es-ES, en-US
+Accept-Encoding: gzip, deflate
+
+# Cache
+If-None-Match: "etag123"
+If-Modified-Since: Wed, 21 Oct 2015 07:28:00 GMT
+
+# CORS
+Origin: https://example.com
+Access-Control-Request-Method: POST
+```
+
+### Headers de Respuesta
+
+```http
+# Información del servidor
+Server: nginx/1.18.0
+Date: Mon, 27 Jul 2023 12:28:53 GMT
+
+# Contenido
+Content-Type: application/json; charset=UTF-8
+Content-Length: 348
+Content-Encoding: gzip
+
+# Cache
+Cache-Control: max-age=3600, public
+ETag: "etag123"
+Expires: Tue, 28 Jul 2023 12:28:53 GMT
+Last-Modified: Mon, 27 Jul 2023 10:00:00 GMT
+
+# Seguridad
+Strict-Transport-Security: max-age=31536000
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+
+# CORS
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+
+# Cookies
+Set-Cookie: sessionId=abc123; Path=/; HttpOnly; Secure
+```
+
+## Ejemplo de Intercambio HTTP
+
+### Petición
+```http
+POST /api/auth/login HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+User-Agent: MiApp/1.0
+
+{
+  "email": "usuario@example.com",
+  "password": "secreto123"
+}
+```
+
+### Respuesta
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+Set-Cookie: token=jwt123; HttpOnly; Secure; Path=/
+Access-Control-Allow-Origin: https://miapp.com
+
+{
+  "success": true,
+  "user": {
+    "id": 123,
+    "name": "Usuario",
+    "email": "usuario@example.com"
+  },
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+}
+```
+
+## HTTPS
+
+**HTTPS** es HTTP sobre SSL/TLS, proporcionando:
+
+- **Cifrado**: Datos encriptados en tránsito
+- **Autenticación**: Verificación de identidad del servidor
+- **Integridad**: Protección contra alteraciones
+
+```
+HTTP  → Puerto 80  → Sin cifrado
+HTTPS → Puerto 443 → Con cifrado SSL/TLS
+```
+
+## HTTP/2 y HTTP/3
+
+### HTTP/2
+- **Multiplexing**: Múltiples peticiones en paralelo
+- **Server Push**: El servidor puede enviar recursos proactivamente
+- **Header Compression**: Compresión HPACK
+- **Binario**: No es texto plano
+
+### HTTP/3
+- **QUIC**: Protocolo de transporte sobre UDP
+- **Menor latencia**: Menos round-trips
+- **Mejor en redes inestables**: Resistente a pérdidas de paquetes
+
+## Herramientas para HTTP
+
+### Desarrollo
+- **curl**: Cliente de línea de comandos
+- **Postman**: Cliente gráfico para APIs
+- **HTTPie**: Cliente simple para terminal
+- **Insomnia**: Alternativa a Postman
+
+### Debugging
+- **Browser DevTools**: Inspector de red
+- **Wireshark**: Análisis de tráfico
+- **Charles Proxy**: Proxy para debugging
+- **Fiddler**: Debugging en Windows
+
+## Relacionado
+
+- [REST API](/concepts/rest-api) - Arquitectura sobre HTTP
+- [CORS](/concepts/cors) - Políticas de origen cruzado
+- [Authentication](/concepts/authentication) - Autenticación web
+- [Caching](/concepts/caching) - Almacenamiento en cache
+- [SSL/TLS](/concepts/ssl-tls) - Cifrado para HTTPS
+- [Web APIs](/concepts/web-apis) - APIs basadas en HTTP

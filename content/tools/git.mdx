@@ -1,0 +1,369 @@
+---
+title: "Git"
+category: "Tools"
+description: "Sistema de control de versiones distribuido para rastrear cambios en el código fuente"
+difficulty: "Intermedio"
+tags: ["version-control", "collaboration", "development"]
+---
+
+# Git
+
+**Git** es un sistema de control de versiones distribuido que permite rastrear cambios en archivos y coordinar el trabajo entre múltiples desarrolladores.
+
+## ¿Qué es Git?
+
+Git proporciona:
+
+- **Control de versiones**: Historial completo de cambios
+- **Trabajo distribuido**: Cada desarrollador tiene copia completa
+- **Branching**: Ramas para desarrollo paralelo
+- **Merging**: Combinación de cambios
+- **Colaboración**: Trabajo en equipo eficiente
+
+## Conceptos Fundamentales
+
+### Repository (Repositorio)
+Contenedor que almacena todo el historial del proyecto.
+
+### Working Directory
+Directorio local donde trabajas con los archivos.
+
+### Staging Area (Index)
+Área intermedia donde preparas cambios para commit.
+
+### Commit
+Snapshot del estado del proyecto en un momento específico.
+
+### Branch (Rama)
+Línea independiente de desarrollo.
+
+### Merge
+Combinación de cambios de diferentes ramas.
+
+## Configuración Inicial
+
+```bash
+# Configurar identidad
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu@email.com"
+
+# Ver configuración
+git config --list
+
+# Configurar editor por defecto
+git config --global core.editor "code --wait"
+
+# Configurar alias útiles
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+```
+
+## Comandos Básicos
+
+### Inicializar y Clonar
+
+```bash
+# Inicializar repositorio nuevo
+git init
+
+# Clonar repositorio existente
+git clone https://github.com/usuario/repo.git
+
+# Clonar con nombre específico
+git clone https://github.com/usuario/repo.git mi-proyecto
+```
+
+### Tracking y Staging
+
+```bash
+# Ver estado de archivos
+git status
+
+# Añadir archivos al staging
+git add archivo.txt
+git add .                    # Todos los archivos
+git add *.js                 # Archivos JavaScript
+git add src/                 # Directorio completo
+
+# Quitar del staging
+git reset archivo.txt
+
+# Ver diferencias
+git diff                     # Working vs Staging
+git diff --staged            # Staging vs último commit
+git diff HEAD                # Working vs último commit
+```
+
+### Commits
+
+```bash
+# Hacer commit
+git commit -m "Mensaje descriptivo del cambio"
+
+# Commit con descripción extendida
+git commit -m "Título corto" -m "Descripción más detallada"
+
+# Commit saltando staging (archivos ya tracked)
+git commit -am "Mensaje del commit"
+
+# Modificar último commit
+git commit --amend -m "Nuevo mensaje"
+
+# Ver historial
+git log
+git log --oneline            # Formato compacto
+git log --graph              # Con gráfico
+git log --author="Nombre"     # Por autor
+```
+
+## Trabajo con Ramas
+
+### Crear y Cambiar Ramas
+
+```bash
+# Ver ramas
+git branch                   # Ramas locales
+git branch -r                # Ramas remotas
+git branch -a                # Todas las ramas
+
+# Crear rama nueva
+git branch nueva-feature
+
+# Cambiar de rama
+git checkout nueva-feature
+
+# Crear y cambiar en un comando
+git checkout -b nueva-feature
+
+# Cambiar a rama anterior
+git checkout -
+
+# Renombrar rama
+git branch -m viejo-nombre nuevo-nombre
+
+# Eliminar rama
+git branch -d rama-terminada
+git branch -D rama-forzar    # Forzar eliminación
+```
+
+### Merging
+
+```bash
+# Hacer merge (desde la rama destino)
+git checkout main
+git merge nueva-feature
+
+# Merge sin fast-forward
+git merge --no-ff nueva-feature
+
+# Resolver conflictos
+# 1. Editar archivos en conflicto
+# 2. Añadir archivos resueltos
+git add archivo-conflicto.txt
+# 3. Completar merge
+git commit
+```
+
+## Trabajo con Remotos
+
+### Configurar Remotos
+
+```bash
+# Ver remotos
+git remote -v
+
+# Añadir remoto
+git remote add origin https://github.com/usuario/repo.git
+
+# Cambiar URL del remoto
+git remote set-url origin nueva-url
+
+# Eliminar remoto
+git remote remove origin
+```
+
+### Sincronizar con Remotos
+
+```bash
+# Obtener cambios sin merge
+git fetch origin
+
+# Obtener y hacer merge
+git pull origin main
+
+# Enviar cambios
+git push origin main
+
+# Enviar nueva rama
+git push -u origin nueva-feature
+
+# Enviar todos los tags
+git push --tags
+```
+
+## Comandos Avanzados
+
+### Stashing
+
+```bash
+# Guardar cambios temporalmente
+git stash
+git stash -m "Mensaje descriptivo"
+
+# Ver stashes
+git stash list
+
+# Aplicar último stash
+git stash pop
+
+# Aplicar stash específico
+git stash apply stash@{2}
+
+# Eliminar stash
+git stash drop stash@{1}
+
+# Limpiar todos los stashes
+git stash clear
+```
+
+### Rebase
+
+```bash
+# Rebase interactivo
+git rebase -i HEAD~3         # Últimos 3 commits
+
+# Rebase una rama
+git checkout feature-branch
+git rebase main
+
+# Continuar rebase después de resolver conflictos
+git rebase --continue
+
+# Abortar rebase
+git rebase --abort
+```
+
+### Reset y Revert
+
+```bash
+# Reset suave (mantiene cambios en staging)
+git reset --soft HEAD~1
+
+# Reset mixto (mantiene cambios en working)
+git reset HEAD~1
+
+# Reset duro (elimina todos los cambios)
+git reset --hard HEAD~1
+
+# Revertir commit (crea nuevo commit)
+git revert commit-hash
+```
+
+## Buenas Prácticas
+
+### Mensajes de Commit
+
+```
+Formato recomendado:
+
+type(scope): descripción breve
+
+Descripción más detallada si es necesario.
+
+Ejemplos:
+feat(auth): agregar login con Google
+fix(api): corregir error en validación de email
+docs(readme): actualizar instrucciones de instalación
+refactor(utils): simplificar función de formateo
+```
+
+### Tipos de Commit
+- **feat**: Nueva funcionalidad
+- **fix**: Corrección de bug
+- **docs**: Documentación
+- **style**: Formato, espacios, etc.
+- **refactor**: Refactorización de código
+- **test**: Añadir o modificar tests
+- **chore**: Tareas de mantenimiento
+
+### Workflow con Ramas
+
+```
+Git Flow:
+main/master    → Producción
+develop        → Desarrollo
+feature/*      → Nuevas funcionalidades
+release/*      → Preparación de releases
+hotfix/*       → Correcciones urgentes
+```
+
+## .gitignore
+
+```gitignore
+# Dependencias
+node_modules/
+vendor/
+
+# Archivos de entorno
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Build
+build/
+dist/
+
+# Archivos específicos del proyecto
+config/secrets.js
+uploads/
+```
+
+## Git Hooks
+
+```bash
+# Pre-commit hook (ejecuta antes del commit)
+#!/bin/sh
+# .git/hooks/pre-commit
+
+# Ejecutar linter
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "Error en linting. Commit abortado."
+  exit 1
+fi
+
+# Ejecutar tests
+npm test
+if [ $? -ne 0 ]; then
+  echo "Tests fallaron. Commit abortado."
+  exit 1
+fi
+```
+
+## Relacionado
+
+- [GitHub](/tools/github) - Plataforma de hosting para Git
+- [GitLab](/tools/gitlab) - Alternativa a GitHub
+- [Version Control](/concepts/version-control) - Control de versiones
+- [Collaboration](/concepts/collaboration) - Trabajo en equipo
+- [CI/CD](/concepts/cicd) - Integración y despliegue
+- [SSH](/tools/ssh) - Protocolo para autenticación

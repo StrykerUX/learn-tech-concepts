@@ -1,11 +1,12 @@
 export interface TermMetadata {
   title: string
-  category: 'frontend' | 'ux-ui' | 'backend' | 'general'
-  difficulty: 'facil' | 'intermedio' | 'avanzado'
-  tags: string[]
-  relacionados: string[]
-  tiempo_lectura: number
+  category: 'Frontend' | 'UX/UI' | 'Backend' | 'General' | 'Tools' | 'Concepts'
+  difficulty: 'Principiante' | 'Intermedio' | 'Avanzado'
+  tags?: string[]
+  relacionados?: string[]
+  tiempo_lectura?: number
   descripcion_corta?: string
+  description?: string
 }
 
 export interface Term {

@@ -28,8 +28,8 @@ export default function SearchBar() {
         slug: 'nextjs',
         metadata: {
           title: 'Next.js',
-          category: 'frontend',
-          difficulty: 'intermedio',
+          category: 'Frontend',
+          difficulty: 'Intermedio',
           tags: ['react', 'framework'],
           relacionados: ['react'],
           tiempo_lectura: 4
@@ -41,8 +41,8 @@ export default function SearchBar() {
         slug: 'react',
         metadata: {
           title: 'React',
-          category: 'frontend',
-          difficulty: 'intermedio',
+          category: 'Frontend',
+          difficulty: 'Intermedio',
           tags: ['javascript', 'library'],
           relacionados: ['nextjs'],
           tiempo_lectura: 5

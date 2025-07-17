@@ -1,0 +1,130 @@
+---
+title: "DOM (Document Object Model)"
+category: "Frontend"
+description: "Interfaz de programación que representa documentos HTML/XML como árbol de objetos"
+difficulty: "Intermedio"
+tags: ["javascript", "html", "manipulation"]
+---
+
+# DOM (Document Object Model)
+
+El **DOM** es una representación del documento HTML como un árbol de objetos que puede ser manipulado con JavaScript.
+
+## ¿Qué es el DOM?
+
+El DOM convierte el documento HTML en una estructura de árbol donde:
+
+- Cada **elemento HTML** es un nodo
+- Cada **atributo** es una propiedad
+- El **texto** dentro de elementos son nodos de texto
+- Se puede **navegar**, **modificar** y **escuchar eventos**
+
+## Estructura del DOM
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mi Página</title>
+  </head>
+  <body>
+    <h1 id="titulo">Hola Mundo</h1>
+    <p class="parrafo">Este es un párrafo</p>
+  </body>
+</html>
+```
+
+Árbol DOM resultante:
+```
+Document
+└── html
+    ├── head
+    │   └── title
+    │       └── "Mi Página"
+    └── body
+        ├── h1 (id="titulo")
+        │   └── "Hola Mundo"
+        └── p (class="parrafo")
+            └── "Este es un párrafo"
+```
+
+## Selección de Elementos
+
+```javascript
+// Por ID
+const titulo = document.getElementById('titulo');
+
+// Por clase
+const parrafos = document.getElementsByClassName('parrafo');
+
+// Por etiqueta
+const titulos = document.getElementsByTagName('h1');
+
+// Selectores CSS (recomendado)
+const elemento = document.querySelector('#titulo');
+const elementos = document.querySelectorAll('.parrafo');
+```
+
+## Manipulación de Contenido
+
+```javascript
+// Cambiar texto
+elemento.textContent = 'Nuevo texto';
+elemento.innerHTML = '<strong>Texto en negrita</strong>';
+
+// Cambiar atributos
+elemento.setAttribute('class', 'nueva-clase');
+elemento.id = 'nuevo-id';
+
+// Cambiar estilos
+elemento.style.color = 'red';
+elemento.style.fontSize = '20px';
+```
+
+## Creación y Eliminación
+
+```javascript
+// Crear elemento
+const nuevoDiv = document.createElement('div');
+nuevoDiv.textContent = 'Contenido nuevo';
+
+// Añadir al DOM
+document.body.appendChild(nuevoDiv);
+
+// Eliminar elemento
+elemento.remove();
+// o
+elemento.parentNode.removeChild(elemento);
+```
+
+## Eventos del DOM
+
+```javascript
+// Añadir evento
+elemento.addEventListener('click', function() {
+  console.log('Elemento clickeado');
+});
+
+// Eventos comunes
+elemento.addEventListener('mouseover', manejarHover);
+elemento.addEventListener('submit', manejarFormulario);
+document.addEventListener('DOMContentLoaded', inicializar);
+```
+
+## Navegación por el DOM
+
+```javascript
+// Relaciones familiares
+const padre = elemento.parentNode;
+const hijos = elemento.children;
+const hermanoSiguiente = elemento.nextElementSibling;
+const hermanoAnterior = elemento.previousElementSibling;
+```
+
+## Relacionado
+
+- [HTML](/frontend/html) - Estructura que forma el DOM
+- [JavaScript](/frontend/javascript) - Lenguaje para manipular el DOM
+- [CSS](/frontend/css) - Estilos aplicados vía DOM
+- [Event Handling](/frontend/events) - Manejo de eventos
+- [Virtual DOM](/frontend/virtual-dom) - Abstracción del DOM

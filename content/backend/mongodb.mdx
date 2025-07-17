@@ -1,0 +1,303 @@
+---
+title: "MongoDB"
+category: "Backend"
+description: "Base de datos NoSQL orientada a documentos que almacena datos en formato BSON"
+difficulty: "Intermedio"
+tags: ["database", "nosql", "documents"]
+---
+
+# MongoDB
+
+**MongoDB** es una base de datos NoSQL orientada a documentos que almacena datos en formato BSON (Binary JSON), ofreciendo flexibilidad y escalabilidad.
+
+## ¿Qué es MongoDB?
+
+MongoDB se caracteriza por:
+
+- **Orientada a documentos**: Datos almacenados como documentos JSON
+- **Esquema flexible**: No requiere estructura fija
+- **Escalabilidad horizontal**: Fácil distribución
+- **Consultas potentes**: Soporte para consultas complejas
+- **Índices**: Optimización de búsquedas
+
+## Conceptos Fundamentales
+
+```
+SQL          →  MongoDB
+-------------------
+Database     →  Database
+Table        →  Collection
+Row          →  Document
+Column       →  Field
+Primary Key  →  _id
+```
+
+## Estructura de Documentos
+
+```javascript
+// Documento de ejemplo
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "nombre": "Juan Pérez",
+  "edad": 30,
+  "email": "juan@example.com",
+  "direccion": {
+    "calle": "Av. Principal 123",
+    "ciudad": "Madrid",
+    "codigoPostal": "28001"
+  },
+  "hobbies": ["programación", "música", "deportes"],
+  "fechaRegistro": ISODate("2023-01-15T10:30:00Z"),
+  "activo": true
+}
+```
+
+## Operaciones Básicas (MongoDB Shell)
+
+### Insertar Documentos
+
+```javascript
+// Insertar uno
+db.usuarios.insertOne({
+  nombre: "Ana García",
+  edad: 25,
+  email: "ana@example.com"
+});
+
+// Insertar múltiples
+db.usuarios.insertMany([
+  { nombre: "Carlos", edad: 35 },
+  { nombre: "María", edad: 28 }
+]);
+```
+
+### Consultar Documentos
+
+```javascript
+// Encontrar todos
+db.usuarios.find();
+
+// Encontrar con filtro
+db.usuarios.find({ edad: { $gte: 25 } });
+
+// Encontrar uno
+db.usuarios.findOne({ email: "juan@example.com" });
+
+// Proyección (seleccionar campos)
+db.usuarios.find({}, { nombre: 1, email: 1, _id: 0 });
+
+// Ordenar
+db.usuarios.find().sort({ edad: -1 }); // Descendente
+
+// Limitar resultados
+db.usuarios.find().limit(5);
+
+// Saltar documentos
+db.usuarios.find().skip(10).limit(5);
+```
+
+### Actualizar Documentos
+
+```javascript
+// Actualizar uno
+db.usuarios.updateOne(
+  { email: "juan@example.com" },
+  { $set: { edad: 31, activo: true } }
+);
+
+// Actualizar múltiples
+db.usuarios.updateMany(
+  { edad: { $lt: 18 } },
+  { $set: { categoria: "menor" } }
+);
+
+// Upsert (insertar si no existe)
+db.usuarios.updateOne(
+  { email: "nuevo@example.com" },
+  { $set: { nombre: "Nuevo Usuario" } },
+  { upsert: true }
+);
+```
+
+### Eliminar Documentos
+
+```javascript
+// Eliminar uno
+db.usuarios.deleteOne({ email: "eliminar@example.com" });
+
+// Eliminar múltiples
+db.usuarios.deleteMany({ activo: false });
+```
+
+## Operadores de Consulta
+
+```javascript
+// Operadores de comparación
+db.usuarios.find({ edad: { $gt: 25 } });        // Mayor que
+db.usuarios.find({ edad: { $gte: 25 } });       // Mayor o igual
+db.usuarios.find({ edad: { $lt: 30 } });        // Menor que
+db.usuarios.find({ edad: { $lte: 30 } });       // Menor o igual
+db.usuarios.find({ edad: { $ne: 25 } });        // No igual
+db.usuarios.find({ edad: { $in: [25, 30] } });  // En array
+
+// Operadores lógicos
+db.usuarios.find({
+  $and: [
+    { edad: { $gte: 25 } },
+    { activo: true }
+  ]
+});
+
+db.usuarios.find({
+  $or: [
+    { edad: { $lt: 18 } },
+    { edad: { $gt: 65 } }
+  ]
+});
+
+// Operadores de array
+db.usuarios.find({ hobbies: "programación" });     // Contiene elemento
+db.usuarios.find({ hobbies: { $all: ["música", "deportes"] } }); // Contiene todos
+db.usuarios.find({ hobbies: { $size: 3 } });       // Tamaño del array
+
+// Operadores de texto
+db.usuarios.find({ nombre: /^Juan/ });             // Regex
+db.usuarios.find({ $text: { $search: "programador" } }); // Búsqueda de texto
+```
+
+## Agregación (Aggregation)
+
+```javascript
+// Pipeline de agregación
+db.usuarios.aggregate([
+  // Filtrar
+  { $match: { activo: true } },
+  
+  // Agrupar
+  {
+    $group: {
+      _id: "$ciudad",
+      totalUsuarios: { $sum: 1 },
+      edadPromedio: { $avg: "$edad" },
+      edadMaxima: { $max: "$edad" }
+    }
+  },
+  
+  // Ordenar
+  { $sort: { totalUsuarios: -1 } },
+  
+  // Limitar
+  { $limit: 5 }
+]);
+
+// Lookup (JOIN)
+db.pedidos.aggregate([
+  {
+    $lookup: {
+      from: "usuarios",
+      localField: "usuarioId",
+      foreignField: "_id",
+      as: "datosUsuario"
+    }
+  }
+]);
+```
+
+## Índices
+
+```javascript
+// Crear índice simple
+db.usuarios.createIndex({ email: 1 });
+
+// Índice compuesto
+db.usuarios.createIndex({ edad: 1, ciudad: -1 });
+
+// Índice de texto
+db.usuarios.createIndex({ nombre: "text", descripcion: "text" });
+
+// Ver índices
+db.usuarios.getIndexes();
+
+// Eliminar índice
+db.usuarios.dropIndex({ email: 1 });
+```
+
+## Mongoose (ODM para Node.js)
+
+```javascript
+const mongoose = require('mongoose');
+
+// Esquema
+const usuarioSchema = new mongoose.Schema({
+  nombre: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 50
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  },
+  edad: {
+    type: Number,
+    min: 0,
+    max: 120
+  },
+  fechaRegistro: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+// Modelo
+const Usuario = mongoose.model('Usuario', usuarioSchema);
+
+// Usar el modelo
+async function crearUsuario() {
+  const usuario = new Usuario({
+    nombre: 'Juan Pérez',
+    email: 'juan@example.com',
+    edad: 30
+  });
+  
+  try {
+    const resultado = await usuario.save();
+    console.log('Usuario creado:', resultado);
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+}
+
+// Consultas con Mongoose
+const usuarios = await Usuario.find({ edad: { $gte: 25 } })
+                              .select('nombre email')
+                              .sort({ nombre: 1 })
+                              .limit(10);
+```
+
+## Ventajas y Desventajas
+
+### Ventajas
+- **Flexibilidad de esquema**
+- **Escalabilidad horizontal**
+- **Consultas potentes**
+- **Desarrollo rápido**
+- **JSON nativo**
+
+### Desventajas
+- **Menor consistencia ACID**
+- **Mayor uso de memoria**
+- **Curva de aprendizaje**
+- **Sin JOINs complejos**
+
+## Relacionado
+
+- [Node.js](/backend/nodejs) - Plataforma popular para MongoDB
+- [Express](/backend/express) - Framework para APIs con MongoDB
+- [NoSQL](/concepts/nosql) - Tipo de base de datos
+- [JSON](/concepts/json) - Formato de datos
+- [Database](/concepts/database) - Conceptos generales
+- [Mongoose](/backend/mongoose) - ODM para Node.js

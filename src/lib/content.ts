@@ -6,8 +6,15 @@ import { Term, TermMetadata } from '@/types'
 const contentDirectory = path.join(process.cwd(), 'content')
 
 export function getAllTerms(): Term[] {
-  const categories = ['frontend', 'ux-ui', 'backend', 'general']
   const terms: Term[] = []
+
+  // Leer todas las categorías disponibles dinámicamente
+  if (!fs.existsSync(contentDirectory)) return terms
+
+  const categories = fs.readdirSync(contentDirectory).filter(item => {
+    const categoryPath = path.join(contentDirectory, item)
+    return fs.statSync(categoryPath).isDirectory()
+  })
 
   categories.forEach(category => {
     const categoryPath = path.join(contentDirectory, category)
@@ -29,7 +36,7 @@ export function getAllTerms(): Term[] {
         slug,
         metadata: {
           ...data,
-          category: category as TermMetadata['category']
+          category: data.category || category
         } as TermMetadata,
         content,
         filePath: `/${category}/${slug}`
@@ -53,7 +60,7 @@ export function getTermBySlug(category: string, slug: string): Term | null {
       slug,
       metadata: {
         ...data,
-        category: category as TermMetadata['category']
+        category: data.category || category
       } as TermMetadata,
       content,
       filePath: `/${category}/${slug}`
@@ -85,7 +92,7 @@ export function getTermsByCategory(category: string): Term[] {
       slug,
       metadata: {
         ...data,
-        category: category as TermMetadata['category']
+        category: data.category || category
       } as TermMetadata,
       content,
       filePath: `/${category}/${slug}`
@@ -101,4 +108,10 @@ export function processInternalLinks(content: string): string {
     /\[([^\]]+)\]\(\/([^)]+)\)/g, 
     '<a href="/terminos/$2" class="text-blue-600 hover:text-blue-800 underline">$1</a>'
   )
+}
+
+export function getTermUrl(filePath: string): string {
+  // Asegura que la URL del término tenga el formato correcto
+  const cleanPath = filePath.startsWith('/') ? filePath : '/' + filePath
+  return `/terminos${cleanPath}`
 }

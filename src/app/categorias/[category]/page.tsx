@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getTermsByCategory } from '@/lib/content'
+import { getTermsByCategory, getTermUrl } from '@/lib/content'
 
 interface PageProps {
   params: Promise<{
@@ -8,26 +8,42 @@ interface PageProps {
   }>
 }
 
-const categoryInfo: Record<string, { name: string; icon: string; description: string }> = {
-  frontend: {
+const categoryInfo: Record<string, { name: string; icon: string; description: string; folder: string }> = {
+  'frontend': {
     name: 'Frontend',
     icon: '💻',
-    description: 'Tecnologías del lado del cliente como React, HTML, CSS, JavaScript y frameworks modernos'
+    description: 'Tecnologías del lado del cliente como React, HTML, CSS, JavaScript y frameworks modernos',
+    folder: 'frontend'
   },
   'ux-ui': {
     name: 'UX/UI',
     icon: '🎨',
-    description: 'Diseño de experiencia e interfaz de usuario, wireframes, prototipos y metodologías de diseño'
+    description: 'Diseño de experiencia e interfaz de usuario, wireframes, prototipos y metodologías de diseño',
+    folder: 'ux-ui'
   },
-  backend: {
+  'backend': {
     name: 'Backend',
     icon: '⚙️',
-    description: 'Tecnologías del lado del servidor, APIs, bases de datos y arquitectura de sistemas'
+    description: 'Tecnologías del lado del servidor, APIs, bases de datos y arquitectura de sistemas',
+    folder: 'backend'
   },
-  general: {
+  'general': {
     name: 'General',
     icon: '📚',
-    description: 'Conceptos generales de tecnología, desarrollo de software y metodologías'
+    description: 'Conceptos generales de tecnología, desarrollo de software y metodologías',
+    folder: 'general'
+  },
+  'herramientas': {
+    name: 'Herramientas',
+    icon: '🔧',
+    description: 'Herramientas de desarrollo como Git, Docker, editores y utilidades para programadores',
+    folder: 'tools'
+  },
+  'conceptos': {
+    name: 'Conceptos',
+    icon: '💡',
+    description: 'Conceptos fundamentales de programación, protocolos web y principios de desarrollo',
+    folder: 'concepts'
   }
 }
 
@@ -61,12 +77,12 @@ export default async function CategoryPage({ params }: PageProps) {
     notFound()
   }
 
-  const terms = getTermsByCategory(category)
+  const terms = getTermsByCategory(info.folder)
 
   const difficultyGroups = {
-    facil: terms.filter(t => t.metadata.difficulty === 'facil'),
-    intermedio: terms.filter(t => t.metadata.difficulty === 'intermedio'),
-    avanzado: terms.filter(t => t.metadata.difficulty === 'avanzado')
+    'Principiante': terms.filter(t => t.metadata.difficulty === 'Principiante'),
+    'Intermedio': terms.filter(t => t.metadata.difficulty === 'Intermedio'),
+    'Avanzado': terms.filter(t => t.metadata.difficulty === 'Avanzado')
   }
 
   return (
@@ -90,7 +106,7 @@ export default async function CategoryPage({ params }: PageProps) {
         <div className="inline-flex items-center space-x-4 text-sm text-gray-500">
           <span>{terms.length} término{terms.length !== 1 ? 's' : ''} disponible{terms.length !== 1 ? 's' : ''}</span>
           <span>•</span>
-          <span>{Math.round(terms.reduce((acc, term) => acc + term.metadata.tiempo_lectura, 0))} min de lectura total</span>
+          <span>{Math.round(terms.reduce((acc, term) => acc + (term.metadata.tiempo_lectura || 5), 0))} min de lectura total</span>
         </div>
       </div>
 
@@ -109,9 +125,9 @@ export default async function CategoryPage({ params }: PageProps) {
             if (difficultyTerms.length === 0) return null
             
             const difficultyConfig = {
-              facil: { name: 'Fácil', color: 'bg-green-50 border-green-200', badge: 'bg-green-100 text-green-800' },
-              intermedio: { name: 'Intermedio', color: 'bg-yellow-50 border-yellow-200', badge: 'bg-yellow-100 text-yellow-800' },
-              avanzado: { name: 'Avanzado', color: 'bg-red-50 border-red-200', badge: 'bg-red-100 text-red-800' }
+              'Principiante': { name: 'Principiante', color: 'bg-green-50 border-green-200', badge: 'bg-green-100 text-green-800' },
+              'Intermedio': { name: 'Intermedio', color: 'bg-yellow-50 border-yellow-200', badge: 'bg-yellow-100 text-yellow-800' },
+              'Avanzado': { name: 'Avanzado', color: 'bg-red-50 border-red-200', badge: 'bg-red-100 text-red-800' }
             }
             
             const config = difficultyConfig[difficulty as keyof typeof difficultyConfig]
@@ -129,22 +145,22 @@ export default async function CategoryPage({ params }: PageProps) {
                   {difficultyTerms.map((term) => (
                     <Link
                       key={term.slug}
-                      href={`/terminos${term.filePath}`}
+                      href={getTermUrl(term.filePath)}
                       className={`block p-6 rounded-lg border-2 transition-all hover:shadow-lg ${config.color}`}
                     >
                       <div className="flex items-start justify-between mb-3">
                         <h3 className="font-semibold text-lg text-gray-900">{term.metadata.title}</h3>
-                        <span className="text-xs text-gray-500">⏱️ {term.metadata.tiempo_lectura} min</span>
+                        <span className="text-xs text-gray-500">⏱️ {term.metadata.tiempo_lectura || 5} min</span>
                       </div>
                       
-                      {term.metadata.descripcion_corta && (
+                      {(term.metadata.descripcion_corta || term.metadata.description) && (
                         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                          {term.metadata.descripcion_corta}
+                          {term.metadata.descripcion_corta || term.metadata.description}
                         </p>
                       )}
                       
                       <div className="flex flex-wrap gap-1">
-                        {term.metadata.tags.slice(0, 3).map((tag) => (
+                        {term.metadata.tags && term.metadata.tags.slice(0, 3).map((tag) => (
                           <span 
                             key={tag}
                             className="px-2 py-1 bg-white bg-opacity-60 text-xs rounded-full"
@@ -152,7 +168,7 @@ export default async function CategoryPage({ params }: PageProps) {
                             {tag}
                           </span>
                         ))}
-                        {term.metadata.tags.length > 3 && (
+                        {term.metadata.tags && term.metadata.tags.length > 3 && (
                           <span className="px-2 py-1 bg-white bg-opacity-60 text-xs rounded-full">
                             +{term.metadata.tags.length - 3}
                           </span>

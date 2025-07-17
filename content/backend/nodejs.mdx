@@ -1,0 +1,204 @@
+---
+title: "Node.js"
+category: "Backend"
+description: "Entorno de ejecución de JavaScript en el servidor basado en el motor V8 de Chrome"
+difficulty: "Intermedio"
+tags: ["runtime", "server", "javascript"]
+---
+
+# Node.js
+
+**Node.js** es un entorno de ejecución de JavaScript construido sobre el motor V8 de Chrome que permite ejecutar JavaScript en el servidor.
+
+## ¿Qué es Node.js?
+
+Node.js permite:
+
+- **JavaScript en el servidor**: Usar JS fuera del navegador
+- **Event-driven**: Arquitectura basada en eventos
+- **Non-blocking I/O**: Operaciones asincrónicas eficientes
+- **NPM**: Gestor de paquetes más grande del mundo
+- **Cross-platform**: Funciona en Windows, Mac, Linux
+
+## Instalación y Uso
+
+```bash
+# Verificar instalación
+node --version
+npm --version
+
+# Ejecutar archivo
+node app.js
+
+# Modo interactivo (REPL)
+node
+```
+
+## Servidor Básico
+
+```javascript
+// app.js
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.end('<h1>Hola desde Node.js!</h1>');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
+```
+
+## Módulos Core
+
+```javascript
+// Sistema de archivos
+const fs = require('fs');
+
+// Leer archivo asíncrono
+fs.readFile('archivo.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+
+// Leer archivo síncrono
+const contenido = fs.readFileSync('archivo.txt', 'utf8');
+
+// Path utilities
+const path = require('path');
+const rutaCompleta = path.join(__dirname, 'archivos', 'config.json');
+
+// Sistema operativo
+const os = require('os');
+console.log('Plataforma:', os.platform());
+console.log('Arquitectura:', os.arch());
+```
+
+## NPM (Node Package Manager)
+
+```bash
+# Inicializar proyecto
+npm init -y
+
+# Instalar dependencias
+npm install express
+npm install -D nodemon  # Dependencia de desarrollo
+
+# Scripts en package.json
+{
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "jest"
+  }
+}
+
+# Ejecutar scripts
+npm start
+npm run dev
+```
+
+## Express.js Framework
+
+```javascript
+const express = require('express');
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(express.static('public'));
+
+// Rutas
+app.get('/', (req, res) => {
+  res.json({ mensaje: 'Hola mundo' });
+});
+
+app.get('/usuarios/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({ usuario: `Usuario ${id}` });
+});
+
+app.post('/usuarios', (req, res) => {
+  const nuevoUsuario = req.body;
+  // Lógica para crear usuario
+  res.status(201).json(nuevoUsuario);
+});
+
+app.listen(3000, () => {
+  console.log('Servidor Express en puerto 3000');
+});
+```
+
+## Manejo de Asincronía
+
+```javascript
+// Callbacks
+fs.readFile('archivo.txt', (err, data) => {
+  if (err) return console.error(err);
+  console.log(data.toString());
+});
+
+// Promises
+const { promisify } = require('util');
+const readFileAsync = promisify(fs.readFile);
+
+readFileAsync('archivo.txt', 'utf8')
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+
+// Async/Await
+async function leerArchivo() {
+  try {
+    const data = await readFileAsync('archivo.txt', 'utf8');
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+```
+
+## Event Emitter
+
+```javascript
+const EventEmitter = require('events');
+
+class MiEmitter extends EventEmitter {}
+const emisor = new MiEmitter();
+
+// Escuchar eventos
+emisor.on('mensaje', (data) => {
+  console.log('Evento recibido:', data);
+});
+
+// Emitir eventos
+emisor.emit('mensaje', 'Hola desde el emisor');
+```
+
+## Variables de Entorno
+
+```javascript
+// Usando dotenv
+require('dotenv').config();
+
+const PORT = process.env.PORT || 3000;
+const DB_URL = process.env.DATABASE_URL;
+const API_KEY = process.env.API_KEY;
+
+console.log('Configuración:', {
+  puerto: PORT,
+  entorno: process.env.NODE_ENV
+});
+```
+
+## Relacionado
+
+- [JavaScript](/frontend/javascript) - Lenguaje base
+- [Express](/backend/express) - Framework web
+- [NPM](/tools/npm) - Gestor de paquetes
+- [API](/general/api) - Creación de APIs
+- [MongoDB](/backend/mongodb) - Base de datos popular con Node
+- [TypeScript](/frontend/typescript) - Node con tipado

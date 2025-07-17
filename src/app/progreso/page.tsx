@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ProgressData, Term } from '@/types'
 
+function getTermUrl(filePath: string): string {
+  const cleanPath = filePath.startsWith('/') ? filePath : '/' + filePath
+  return `/terminos${cleanPath}`
+}
+
 export default function ProgresoPage() {
   const [progress, setProgress] = useState<ProgressData | null>(null)
   const [allTerms, setAllTerms] = useState<Term[]>([])
@@ -15,8 +20,8 @@ export default function ProgresoPage() {
         slug: 'nextjs',
         metadata: {
           title: 'Next.js',
-          category: 'frontend',
-          difficulty: 'intermedio',
+          category: 'Frontend',
+          difficulty: 'Intermedio',
           tags: ['react', 'framework'],
           relacionados: ['react'],
           tiempo_lectura: 4
@@ -28,8 +33,8 @@ export default function ProgresoPage() {
         slug: 'react',
         metadata: {
           title: 'React',
-          category: 'frontend',
-          difficulty: 'intermedio',
+          category: 'Frontend',
+          difficulty: 'Intermedio',
           tags: ['javascript', 'library'],
           relacionados: ['nextjs'],
           tiempo_lectura: 5
@@ -41,8 +46,8 @@ export default function ProgresoPage() {
         slug: 'wireframe',
         metadata: {
           title: 'Wireframe',
-          category: 'ux-ui',
-          difficulty: 'facil',
+          category: 'UX/UI',
+          difficulty: 'Principiante',
           tags: ['diseño', 'prototipo'],
           relacionados: ['mockup'],
           tiempo_lectura: 3
@@ -54,8 +59,8 @@ export default function ProgresoPage() {
         slug: 'api',
         metadata: {
           title: 'API',
-          category: 'general',
-          difficulty: 'facil',
+          category: 'General',
+          difficulty: 'Principiante',
           tags: ['backend', 'comunicacion'],
           relacionados: ['rest'],
           tiempo_lectura: 4
@@ -67,8 +72,8 @@ export default function ProgresoPage() {
         slug: 'html',
         metadata: {
           title: 'HTML',
-          category: 'frontend',
-          difficulty: 'facil',
+          category: 'Frontend',
+          difficulty: 'Principiante',
           tags: ['markup', 'estructura'],
           relacionados: ['css'],
           tiempo_lectura: 3
@@ -107,13 +112,15 @@ export default function ProgresoPage() {
   const progressPercentage = Math.round((progress.visitedTerms.length / allTerms.length) * 100)
   
   const categoryCounts = {
-    frontend: visitedTerms.filter(t => t.metadata.category === 'frontend').length,
-    'ux-ui': visitedTerms.filter(t => t.metadata.category === 'ux-ui').length,
-    backend: visitedTerms.filter(t => t.metadata.category === 'backend').length,
-    general: visitedTerms.filter(t => t.metadata.category === 'general').length
+    'Frontend': visitedTerms.filter(t => t.metadata.category === 'Frontend').length,
+    'UX/UI': visitedTerms.filter(t => t.metadata.category === 'UX/UI').length,
+    'Backend': visitedTerms.filter(t => t.metadata.category === 'Backend').length,
+    'General': visitedTerms.filter(t => t.metadata.category === 'General').length,
+    'Tools': visitedTerms.filter(t => t.metadata.category === 'Tools').length,
+    'Concepts': visitedTerms.filter(t => t.metadata.category === 'Concepts').length
   }
 
-  const totalReadingTime = visitedTerms.reduce((acc, term) => acc + term.metadata.tiempo_lectura, 0)
+  const totalReadingTime = visitedTerms.reduce((acc, term) => acc + (term.metadata.tiempo_lectura || 5), 0)
 
   const availableBadges = [
     {
@@ -128,14 +135,14 @@ export default function ProgresoPage() {
       name: 'Frontend Explorer',
       description: 'Lee 3 términos de Frontend',
       icon: '💻',
-      earned: categoryCounts.frontend >= 3
+      earned: categoryCounts['Frontend'] >= 3
     },
     {
       id: 'ux_enthusiast',
       name: 'UX Enthusiast',
       description: 'Lee 3 términos de UX/UI',
       icon: '🎨',
-      earned: categoryCounts['ux-ui'] >= 3
+      earned: categoryCounts['UX/UI'] >= 3
     },
     {
       id: 'knowledge_seeker',
@@ -270,7 +277,7 @@ export default function ProgresoPage() {
             {visitedTerms.slice(-6).reverse().map((term) => (
               <Link
                 key={term.slug}
-                href={`/terminos${term.filePath}`}
+                href={getTermUrl(term.filePath)}
                 className="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
               >
                 <h3 className="font-medium text-gray-900 mb-2">{term.metadata.title}</h3>

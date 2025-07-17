@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { getTermBySlug, getAllTerms } from '@/lib/content'
+import { getTermBySlug, getAllTerms, getTermUrl } from '@/lib/content'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps) {
 
   return {
     title: `${term.metadata.title} - Tech Wiki`,
-    description: term.metadata.descripcion_corta || `Aprende sobre ${term.metadata.title}`,
+    description: term.metadata.description || `Aprende sobre ${term.metadata.title}`,
   }
 }
 
@@ -105,21 +105,25 @@ export default async function TermPage({ params }: PageProps) {
 
   const allTerms = getAllTerms()
   const relatedTerms = allTerms.filter(t => 
-    term.metadata.relacionados.includes(t.slug) ||
-    t.metadata.tags.some(tag => term.metadata.tags.includes(tag))
+    t.slug !== term.slug && (
+      (term.metadata.relacionados && term.metadata.relacionados.includes(t.slug)) ||
+      (term.metadata.tags && t.metadata.tags && t.metadata.tags.some(tag => term.metadata.tags!.includes(tag)))
+    )
   ).slice(0, 4)
 
   const categoryColors: Record<string, string> = {
-    frontend: 'bg-blue-50 text-blue-800 border-blue-200',
-    'ux-ui': 'bg-purple-50 text-purple-800 border-purple-200',
-    backend: 'bg-green-50 text-green-800 border-green-200',
-    general: 'bg-orange-50 text-orange-800 border-orange-200'
+    'Frontend': 'bg-blue-50 text-blue-800 border-blue-200',
+    'UX/UI': 'bg-purple-50 text-purple-800 border-purple-200',
+    'Backend': 'bg-green-50 text-green-800 border-green-200',
+    'General': 'bg-orange-50 text-orange-800 border-orange-200',
+    'Tools': 'bg-gray-50 text-gray-800 border-gray-200',
+    'Concepts': 'bg-indigo-50 text-indigo-800 border-indigo-200'
   }
 
   const difficultyColors: Record<string, string> = {
-    facil: 'bg-green-100 text-green-800',
-    intermedio: 'bg-yellow-100 text-yellow-800',
-    avanzado: 'bg-red-100 text-red-800'
+    'Principiante': 'bg-green-100 text-green-800',
+    'Intermedio': 'bg-yellow-100 text-yellow-800',
+    'Avanzado': 'bg-red-100 text-red-800'
   }
 
   return (
@@ -150,8 +154,8 @@ export default async function TermPage({ params }: PageProps) {
         </div>
 
         <div className="flex items-center space-x-6 text-sm text-gray-500">
-          <span>⏱️ {term.metadata.tiempo_lectura} min de lectura</span>
-          <span>🏷️ {term.metadata.tags.join(', ')}</span>
+          <span>⏱️ {term.metadata.tiempo_lectura || 5} min de lectura</span>
+          {term.metadata.tags && <span>🏷️ {term.metadata.tags.join(', ')}</span>}
         </div>
       </header>
 
@@ -177,13 +181,13 @@ export default async function TermPage({ params }: PageProps) {
             {relatedTerms.map((relatedTerm) => (
               <Link
                 key={relatedTerm.slug}
-                href={`/terminos${relatedTerm.filePath}`}
+                href={getTermUrl(relatedTerm.filePath)}
                 className="block p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
               >
                 <h3 className="font-semibold text-gray-900 mb-2">{relatedTerm.metadata.title}</h3>
                 <div className="flex items-center text-sm text-gray-500 space-x-4">
                   <span className="capitalize">{relatedTerm.metadata.category}</span>
-                  <span>⏱️ {relatedTerm.metadata.tiempo_lectura} min</span>
+                  <span>⏱️ {relatedTerm.metadata.tiempo_lectura || 5} min</span>
                 </div>
               </Link>
             ))}

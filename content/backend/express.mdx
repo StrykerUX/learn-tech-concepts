@@ -1,0 +1,270 @@
+---
+title: "Express.js"
+category: "Backend"
+description: "Framework web minimalista y flexible para Node.js que facilita la creación de aplicaciones y APIs"
+difficulty: "Intermedio"
+tags: ["framework", "web", "nodejs"]
+---
+
+# Express.js
+
+**Express.js** es un framework web rápido, minimalista y flexible para Node.js que simplifica la creación de servidores y APIs.
+
+## ¿Qué es Express.js?
+
+Express proporciona:
+
+- **Routing**: Sistema de rutas flexible
+- **Middleware**: Funciones que procesan peticiones
+- **Template engines**: Soporte para motores de plantillas
+- **Static files**: Servir archivos estáticos
+- **Error handling**: Manejo centralizado de errores
+
+## Instalación y Setup
+
+```bash
+# Instalar Express
+npm install express
+
+# Generador de aplicaciones (opcional)
+npm install -g express-generator
+express mi-app
+```
+
+## Servidor Básico
+
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Middleware global
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Ruta básica
+app.get('/', (req, res) => {
+  res.json({ mensaje: 'Hola desde Express!' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+```
+
+## Sistema de Rutas
+
+```javascript
+// Métodos HTTP
+app.get('/usuarios', (req, res) => {
+  res.json({ usuarios: [] });
+});
+
+app.post('/usuarios', (req, res) => {
+  const nuevoUsuario = req.body;
+  res.status(201).json(nuevoUsuario);
+});
+
+app.put('/usuarios/:id', (req, res) => {
+  const { id } = req.params;
+  const datosActualizados = req.body;
+  res.json({ id, ...datosActualizados });
+});
+
+app.delete('/usuarios/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({ mensaje: `Usuario ${id} eliminado` });
+});
+
+// Parámetros de ruta
+app.get('/usuarios/:id/posts/:postId', (req, res) => {
+  const { id, postId } = req.params;
+  res.json({ userId: id, postId });
+});
+
+// Query parameters
+app.get('/buscar', (req, res) => {
+  const { q, limit = 10 } = req.query;
+  res.json({ busqueda: q, limite: limit });
+});
+```
+
+## Middleware
+
+```javascript
+// Middleware personalizado
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
+  next(); // Importante: llamar next()
+};
+
+app.use(logger);
+
+// Middleware de autenticación
+const autenticar = (req, res, next) => {
+  const token = req.headers.authorization;
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Token requerido' });
+  }
+  
+  // Verificar token...
+  req.usuario = { id: 1, nombre: 'Juan' };
+  next();
+};
+
+// Aplicar a rutas específicas
+app.get('/perfil', autenticar, (req, res) => {
+  res.json({ usuario: req.usuario });
+});
+
+// Middleware de error
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Algo salió mal!' });
+});
+```
+
+## Router Modular
+
+```javascript
+// routes/usuarios.js
+const express = require('express');
+const router = express.Router();
+
+// Todas las rutas son relativas a /usuarios
+router.get('/', (req, res) => {
+  res.json({ usuarios: [] });
+});
+
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  res.json({ usuario: `Usuario ${id}` });
+});
+
+router.post('/', (req, res) => {
+  const nuevoUsuario = req.body;
+  res.status(201).json(nuevoUsuario);
+});
+
+module.exports = router;
+
+// app.js
+const usuariosRouter = require('./routes/usuarios');
+app.use('/usuarios', usuariosRouter);
+```
+
+## Archivos Estáticos
+
+```javascript
+// Servir archivos estáticos
+app.use(express.static('public'));
+app.use('/static', express.static('assets'));
+
+// Estructura de carpetas:
+// public/
+//   ├── css/
+//   ├── js/
+//   └── images/
+
+// Accesible en:
+// http://localhost:3000/css/styles.css
+// http://localhost:3000/js/app.js
+```
+
+## Template Engines
+
+```javascript
+// Usando EJS
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+app.get('/inicio', (req, res) => {
+  const datos = {
+    titulo: 'Mi Aplicación',
+    usuarios: ['Ana', 'Juan', 'María']
+  };
+  res.render('index', datos);
+});
+
+// views/index.ejs
+/*
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= titulo %></title>
+</head>
+<body>
+  <h1><%= titulo %></h1>
+  <ul>
+    <% usuarios.forEach(usuario => { %>
+      <li><%= usuario %></li>
+    <% }); %>
+  </ul>
+</body>
+</html>
+*/
+```
+
+## Middleware Populares
+
+```javascript
+// CORS
+const cors = require('cors');
+app.use(cors());
+
+// Helmet (seguridad)
+const helmet = require('helmet');
+app.use(helmet());
+
+// Morgan (logging)
+const morgan = require('morgan');
+app.use(morgan('combined'));
+
+// Compression
+const compression = require('compression');
+app.use(compression());
+
+// Rate limiting
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100 // máximo 100 peticiones
+});
+app.use(limiter);
+```
+
+## Validación con Joi
+
+```javascript
+const Joi = require('joi');
+
+const validarUsuario = (req, res, next) => {
+  const schema = Joi.object({
+    nombre: Joi.string().min(2).max(50).required(),
+    email: Joi.string().email().required(),
+    edad: Joi.number().integer().min(18).max(120)
+  });
+  
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  
+  next();
+};
+
+app.post('/usuarios', validarUsuario, (req, res) => {
+  // Datos ya validados
+  res.json({ mensaje: 'Usuario creado', datos: req.body });
+});
+```
+
+## Relacionado
+
+- [Node.js](/backend/nodejs) - Plataforma base
+- [REST API](/concepts/rest-api) - Arquitectura de APIs
+- [Middleware](/backend/middleware) - Funciones intermedias
+- [HTTP](/concepts/http) - Protocolo web
+- [JSON](/concepts/json) - Formato de datos
+- [MongoDB](/backend/mongodb) - Base de datos común con Express

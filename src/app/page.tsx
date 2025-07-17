@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllTerms } from '@/lib/content'
+import { getAllTerms, getTermUrl } from '@/lib/content'
 
 export default function HomePage() {
   const allTerms = getAllTerms()
@@ -11,28 +11,42 @@ export default function HomePage() {
       slug: 'frontend',
       icon: '💻',
       color: 'bg-blue-50 border-blue-200 text-blue-800',
-      count: allTerms.filter(t => t.metadata.category === 'frontend').length
+      count: allTerms.filter(t => t.filePath.startsWith('/frontend/')).length
     },
     {
       name: 'UX/UI',
       slug: 'ux-ui',
       icon: '🎨',
       color: 'bg-purple-50 border-purple-200 text-purple-800',
-      count: allTerms.filter(t => t.metadata.category === 'ux-ui').length
+      count: allTerms.filter(t => t.filePath.startsWith('/ux-ui/')).length
     },
     {
       name: 'Backend',
       slug: 'backend',
       icon: '⚙️',
       color: 'bg-green-50 border-green-200 text-green-800',
-      count: allTerms.filter(t => t.metadata.category === 'backend').length
+      count: allTerms.filter(t => t.filePath.startsWith('/backend/')).length
+    },
+    {
+      name: 'Herramientas',
+      slug: 'herramientas',
+      icon: '🔧',
+      color: 'bg-gray-50 border-gray-200 text-gray-800',
+      count: allTerms.filter(t => t.filePath.startsWith('/tools/')).length
+    },
+    {
+      name: 'Conceptos',
+      slug: 'conceptos',
+      icon: '💡',
+      color: 'bg-indigo-50 border-indigo-200 text-indigo-800',
+      count: allTerms.filter(t => t.filePath.startsWith('/concepts/')).length
     },
     {
       name: 'General',
       slug: 'general',
       icon: '📚',
       color: 'bg-orange-50 border-orange-200 text-orange-800',
-      count: allTerms.filter(t => t.metadata.category === 'general').length
+      count: allTerms.filter(t => t.filePath.startsWith('/general/')).length
     }
   ]
 
@@ -88,25 +102,25 @@ export default function HomePage() {
             {recentTerms.map((term) => (
               <Link
                 key={term.slug}
-                href={`/terminos${term.filePath}`}
+                href={getTermUrl(term.filePath)}
                 className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
               >
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="font-semibold text-lg text-gray-900">{term.metadata.title}</h3>
                   <span className={`px-2 py-1 text-xs rounded-full ${
-                    term.metadata.difficulty === 'facil' ? 'bg-green-100 text-green-800' :
-                    term.metadata.difficulty === 'intermedio' ? 'bg-yellow-100 text-yellow-800' :
+                    term.metadata.difficulty === 'Principiante' ? 'bg-green-100 text-green-800' :
+                    term.metadata.difficulty === 'Intermedio' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-red-100 text-red-800'
                   }`}>
                     {term.metadata.difficulty}
                   </span>
                 </div>
                 <p className="text-gray-600 text-sm mb-3">
-                  {term.metadata.descripcion_corta || 'Sin descripción disponible'}
+                  {term.metadata.descripcion_corta || term.metadata.description || 'Sin descripción disponible'}
                 </p>
                 <div className="flex items-center text-xs text-gray-500 space-x-4">
                   <span className="capitalize">{term.metadata.category}</span>
-                  <span>⏱️ {term.metadata.tiempo_lectura} min</span>
+                  <span>⏱️ {term.metadata.tiempo_lectura || 5} min</span>
                 </div>
               </Link>
             ))}
@@ -122,7 +136,7 @@ export default function HomePage() {
             <div className="text-gray-600">Términos Disponibles</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-purple-600">4</div>
+            <div className="text-3xl font-bold text-purple-600">{categories.length}</div>
             <div className="text-gray-600">Categorías</div>
           </div>
           <div>

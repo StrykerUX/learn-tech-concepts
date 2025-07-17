@@ -1,0 +1,233 @@
+---
+title: "Vue.js"
+category: "Frontend"
+description: "Framework progresivo de JavaScript para construir interfaces de usuario interactivas"
+difficulty: "Intermedio"
+tags: ["framework", "components", "reactive"]
+---
+
+# Vue.js
+
+**Vue.js** es un framework progresivo de JavaScript para construir interfaces de usuario, conocido por su simplicidad y flexibilidad.
+
+## ¿Qué es Vue.js?
+
+Vue es un framework que se enfoca en:
+
+- **Simplicidad**: Fácil de aprender y usar
+- **Progresivo**: Se puede adoptar gradualmente
+- **Reactivo**: Actualización automática de la UI
+- **Basado en componentes**: Reutilización de código
+- **Versatilidad**: Desde widgets hasta SPAs
+
+## Componente Básico
+
+```vue
+<template>
+  <div class="contador">
+    <h2>{{ titulo }}</h2>
+    <p>Contador: {{ contador }}</p>
+    <button @click="incrementar">+1</button>
+    <button @click="decrementar">-1</button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Contador',
+  data() {
+    return {
+      titulo: 'Mi Contador',
+      contador: 0
+    }
+  },
+  methods: {
+    incrementar() {
+      this.contador++
+    },
+    decrementar() {
+      this.contador--
+    }
+  }
+}
+</script>
+
+<style scoped>
+.contador {
+  text-align: center;
+  padding: 20px;
+}
+</style>
+```
+
+## Composition API (Vue 3)
+
+```vue
+<template>
+  <div>
+    <h2>{{ titulo }}</h2>
+    <p>Contador: {{ contador }}</p>
+    <button @click="incrementar">+1</button>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+
+const titulo = ref('Mi Contador')
+const contador = ref(0)
+
+const incrementar = () => {
+  contador.value++
+}
+
+const doble = computed(() => contador.value * 2)
+</script>
+```
+
+## Directivas Principales
+
+```vue
+<template>
+  <!-- Renderizado condicional -->
+  <p v-if="mostrar">Visible si mostrar es true</p>
+  <p v-else>Visible si mostrar es false</p>
+  
+  <!-- Bucles -->
+  <ul>
+    <li v-for="item in lista" :key="item.id">
+      {{ item.nombre }}
+    </li>
+  </ul>
+  
+  <!-- Eventos -->
+  <button @click="manejarClick">Click me</button>
+  
+  <!-- Binding de atributos -->
+  <img :src="imagenUrl" :alt="descripcion">
+  
+  <!-- Two-way binding -->
+  <input v-model="mensaje" placeholder="Escribe algo">
+</template>
+```
+
+## Ciclo de Vida
+
+```javascript
+export default {
+  // Options API
+  created() {
+    console.log('Componente creado')
+  },
+  mounted() {
+    console.log('Componente montado en el DOM')
+  },
+  updated() {
+    console.log('Componente actualizado')
+  },
+  beforeUnmount() {
+    console.log('Antes de desmontar')
+  }
+}
+```
+
+## Props y Emits
+
+```vue
+<!-- Componente Hijo -->
+<template>
+  <div>
+    <h3>{{ titulo }}</h3>
+    <button @click="enviarEvento">Enviar</button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    titulo: {
+      type: String,
+      required: true
+    },
+    contador: {
+      type: Number,
+      default: 0
+    }
+  },
+  emits: ['actualizar'],
+  methods: {
+    enviarEvento() {
+      this.$emit('actualizar', 'nuevo valor')
+    }
+  }
+}
+</script>
+```
+
+## Vuex (State Management)
+
+```javascript
+// store.js
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+    contador: 0,
+    usuarios: []
+  },
+  mutations: {
+    INCREMENT(state) {
+      state.contador++
+    },
+    SET_USUARIOS(state, usuarios) {
+      state.usuarios = usuarios
+    }
+  },
+  actions: {
+    async cargarUsuarios({ commit }) {
+      const usuarios = await fetch('/api/usuarios')
+      commit('SET_USUARIOS', usuarios)
+    }
+  },
+  getters: {
+    contadorDoble: state => state.contador * 2
+  }
+})
+```
+
+## Vue Router
+
+```javascript
+// router.js
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from './views/Home.vue'
+import About from './views/About.vue'
+
+const routes = [
+  { path: '/', component: Home },
+  { path: '/about', component: About },
+  { path: '/user/:id', component: User, props: true }
+]
+
+export default createRouter({
+  history: createWebHistory(),
+  routes
+})
+```
+
+## Ventajas de Vue
+
+1. **Curva de aprendizaje suave**
+2. **Documentación excelente**
+3. **Ecosistema maduro**
+4. **Rendimiento optimizado**
+5. **Flexibilidad de uso**
+6. **Herramientas de desarrollo**
+
+## Relacionado
+
+- [React](/frontend/react) - Framework alternativo
+- [JavaScript](/frontend/javascript) - Lenguaje base
+- [TypeScript](/frontend/typescript) - Tipado para Vue
+- [SPA](/concepts/spa) - Aplicaciones de una sola página
+- [Components](/frontend/components) - Arquitectura basada en componentes

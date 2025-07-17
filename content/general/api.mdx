@@ -1,0 +1,95 @@
+---
+title: "API"
+difficulty: "facil"
+tags: ["backend", "comunicacion", "datos", "http"]
+relacionados: ["rest", "graphql", "json"]
+tiempo_lectura: 4
+descripcion_corta: "Interfaz que permite comunicación entre diferentes sistemas"
+---
+
+## ¿Qué es?
+
+Una API (Application Programming Interface) es un **conjunto de reglas y protocolos** que permite que diferentes aplicaciones, servicios o sistemas se comuniquen entre sí de manera estandarizada.
+
+## ¿Para qué sirve?
+
+- **Intercambio de datos**: Enviar y recibir información entre sistemas
+- **Integración de servicios**: Conectar diferentes aplicaciones
+- **Reutilización de funcionalidades**: Usar servicios existentes sin recrearlos
+- **Separación de responsabilidades**: Frontend y backend pueden desarrollarse independientemente
+- **Escalabilidad**: Múltiples clientes pueden usar el mismo backend
+
+## ¿Cuándo usarlo?
+
+### ✅ Necesitas una API cuando:
+- Tu frontend necesita datos del servidor
+- Quieres que otras aplicaciones usen tu servicio
+- Desarrollas una aplicación móvil + web que comparten datos
+- Integras servicios de terceros (pagos, mapas, autenticación)
+- Construyes microservicios
+
+### ❌ Considera alternativas si:
+- Tu aplicación es completamente estática
+- No hay intercambio de datos dinámicos
+- Es un proyecto muy simple de una sola página
+
+## Ejemplos prácticos
+
+**APIs que usas todos los días:**
+- **Twitter API**: Apps como TweetDeck obtienen tweets
+- **Google Maps API**: Uber muestra mapas y rutas
+- **Stripe API**: E-commerce procesa pagos
+- **Weather API**: Apps del clima obtienen pronósticos
+- **Spotify API**: Apps de terceros reproducen música
+
+**Ejemplo de llamada API:**
+```javascript
+// Obtener información de usuario
+fetch('/api/usuarios/123')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Usuario:', data.nombre)
+    console.log('Email:', data.email)
+  })
+
+// Crear nuevo post
+fetch('/api/posts', {
+  method: 'POST',
+  body: JSON.stringify({
+    titulo: 'Mi nuevo post',
+    contenido: 'Contenido del post...'
+  })
+})
+```
+
+## Tipos comunes
+
+**REST API** (más común)
+- Usa HTTP methods: GET, POST, PUT, DELETE
+- URLs descriptivas: `/usuarios/123/posts`
+- Responde en JSON generalmente
+
+**GraphQL API**
+- Un solo endpoint que maneja todo
+- El cliente especifica exactamente qué datos quiere
+- Más eficiente para apps complejas
+
+**WebSocket API**
+- Comunicación en tiempo real
+- Chat, gaming, notificaciones live
+
+## Anatomía de una API REST
+
+```
+GET /api/productos          → Lista todos los productos
+GET /api/productos/123      → Obtiene producto específico
+POST /api/productos         → Crea nuevo producto
+PUT /api/productos/123      → Actualiza producto completo
+DELETE /api/productos/123   → Elimina producto
+```
+
+## Conceptos relacionados
+
+- [REST](/terminos/general/rest) - Estilo arquitectónico común para APIs
+- [JSON](/terminos/general/json) - Formato de datos que usan las APIs
+- [HTTP](/terminos/general/http) - Protocolo de comunicación web

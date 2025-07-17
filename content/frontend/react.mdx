@@ -1,0 +1,75 @@
+---
+title: "React"
+difficulty: "intermedio"
+tags: ["javascript", "library", "componentes", "virtual-dom"]
+relacionados: ["nextjs", "javascript", "jsx"]
+tiempo_lectura: 5
+descripcion_corta: "Biblioteca de JavaScript para construir interfaces de usuario"
+---
+
+## ¿Qué es?
+
+React es una **biblioteca de JavaScript** desarrollada por Meta (Facebook) para construir interfaces de usuario interactivas mediante componentes reutilizables.
+
+## ¿Para qué sirve?
+
+- **Componentes reutilizables**: Divide tu UI en piezas independientes
+- **Virtual DOM**: Actualizaciones eficientes del DOM real
+- **Estado declarativo**: Describes cómo se ve tu UI en cada estado
+- **Ecosistema rico**: Miles de librerías y herramientas compatibles
+- **Unidirectional data flow**: Flujo de datos predecible
+
+## ¿Cuándo usarlo?
+
+### ✅ Perfecto para:
+- Single Page Applications (SPAs)
+- Dashboards complejos con mucha interactividad
+- Aplicaciones que manejan mucho estado
+- Equipos que necesitan componentes reutilizables
+- Proyectos que crecerán en complejidad
+
+### ❌ Considera alternativas si:
+- Sitio web simple con poco JavaScript
+- Equipo sin experiencia en JavaScript moderno
+- SEO es crítico (sin SSR)
+- Necesitas arrancar muy rápido
+
+## Ejemplos prácticos
+
+**Empresas que usan React:**
+- **Facebook**: Toda la plataforma web
+- **Instagram**: Interfaz web
+- **WhatsApp Web**: Aplicación de mensajería
+- **Airbnb**: Plataforma de reservas
+- **Uber**: Dashboard de conductores
+
+**Componente simple:**
+```jsx
+function WelcomeCard({ nombre, rol }) {
+  return (
+    <div className="card">
+      <h2>¡Hola {nombre}!</h2>
+      <p>Rol: {rol}</p>
+      <button onClick={() => alert('¡Bienvenido!')}>
+        Saludar
+      </button>
+    </div>
+  )
+}
+
+// Uso
+<WelcomeCard nombre="Ana" rol="Desarrolladora" />
+```
+
+## Conceptos clave
+
+- **JSX**: Sintaxis que mezcla JavaScript y HTML
+- **Props**: Datos que pasas entre componentes
+- **State**: Datos que cambian en tu componente
+- **Hooks**: Funciones que agregan funcionalidad (useState, useEffect)
+
+## Conceptos relacionados
+
+- [Next.js](/terminos/frontend/nextjs) - Framework basado en React
+- [JavaScript](/terminos/frontend/javascript) - Lenguaje base
+- [JSX](/terminos/frontend/jsx) - Sintaxis de React

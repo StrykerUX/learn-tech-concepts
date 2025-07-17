@@ -1,0 +1,105 @@
+---
+title: "HTML"
+difficulty: "facil"
+tags: ["markup", "estructura", "web", "basico"]
+relacionados: ["css", "javascript", "dom"]
+tiempo_lectura: 3
+descripcion_corta: "Lenguaje de marcado para estructurar contenido web"
+---
+
+## ¿Qué es?
+
+HTML (HyperText Markup Language) es el **lenguaje de marcado estándar** para crear páginas web. Define la estructura y el contenido mediante etiquetas que el navegador interpreta y muestra.
+
+## ¿Para qué sirve?
+
+- **Estructura de contenido**: Organizar texto, imágenes, enlaces
+- **Semántica**: Dar significado a diferentes tipos de contenido
+- **Accesibilidad**: Permitir que lectores de pantalla entiendan el contenido
+- **SEO**: Ayudar a motores de búsqueda a indexar correctamente
+- **Base para CSS y JavaScript**: Proporciona elementos para estilizar e interactuar
+
+## ¿Cuándo usarlo?
+
+### ✅ HTML es fundamental para:
+- Cualquier sitio web o aplicación web
+- Emails con formato (HTML emails)
+- Documentos que se mostrarán en navegadores
+- Aplicaciones móviles híbridas
+- Contenido que necesita ser accesible
+
+### ❌ No es suficiente por sí solo para:
+- Aplicaciones dinámicas complejas (necesitas JavaScript)
+- Estilos visuales atractivos (necesitas CSS)
+- Lógica de negocio (necesitas backend)
+
+## Ejemplos prácticos
+
+**Estructura básica:**
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>Mi primera página</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <header>
+    <h1>Bienvenido a mi sitio</h1>
+    <nav>
+      <a href="#inicio">Inicio</a>
+      <a href="#sobre-mi">Sobre mí</a>
+    </nav>
+  </header>
+  
+  <main>
+    <section id="inicio">
+      <h2>Página de inicio</h2>
+      <p>Este es mi sitio web personal.</p>
+    </section>
+  </main>
+  
+  <footer>
+    <p>&copy; 2024 Mi Sitio Web</p>
+  </footer>
+</body>
+</html>
+```
+
+**Elementos semánticos comunes:**
+- `<header>` - Encabezado de página o sección
+- `<nav>` - Navegación principal
+- `<main>` - Contenido principal
+- `<article>` - Contenido independiente (post, noticia)
+- `<section>` - Sección temática
+- `<aside>` - Contenido relacionado (sidebar)
+- `<footer>` - Pie de página
+
+## Evolución y versiones
+
+**HTML5** (actual)
+- Elementos semánticos (`<header>`, `<nav>`, `<article>`)
+- APIs nativas (geolocalización, local storage)
+- Soporte multimedia (`<video>`, `<audio>`)
+- Mejores formularios (`<input type="email">`)
+
+## Buenas prácticas
+
+```html
+<!-- ✅ Bueno: Semántico y accesible -->
+<button onclick="enviarFormulario()">Enviar</button>
+<img src="logo.jpg" alt="Logo de la empresa">
+<h1>Título principal</h1>
+<h2>Subtítulo</h2>
+
+<!-- ❌ Evitar: Poco semántico -->
+<div onclick="enviarFormulario()">Enviar</div>
+<img src="logo.jpg">
+<div style="font-size: 24px; font-weight: bold;">Título</div>
+```
+
+## Conceptos relacionados
+
+- [CSS](/terminos/frontend/css) - Estilos para HTML
+- [JavaScript](/terminos/frontend/javascript) - Interactividad para HTML
+- [DOM](/terminos/frontend/dom) - Representación del HTML en memoria

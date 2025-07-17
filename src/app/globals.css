@@ -2,69 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Reset para asegurar fondo blanco siempre */
-* {
-  box-sizing: border-box;
-}
-
+/* Solo forzar modo claro sin romper Tailwind */
 html {
-  color-scheme: light !important;
+  color-scheme: light;
 }
 
-html,
-body,
-#__next,
-[data-reactroot] {
-  background-color: #f9fafb !important;
-  color: #111827 !important;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
-}
-
-/* Asegurar que todos los elementos mantengan fondo claro */
-main,
-div,
-section,
-article {
-  background-color: inherit;
-}
-
-/* Override dark mode preferences */
+/* Override dark mode solo para el fondo principal */
 @media (prefers-color-scheme: dark) {
   html,
-  body,
-  #__next,
-  [data-reactroot] {
-    background-color: #f9fafb !important;
-    color: #111827 !important;
+  body {
+    background-color: #f9fafb;
+    color: #111827;
   }
 }
 
-/* Estilos específicos para highlighting de código */
-pre[class*="language-"],
+/* Estilos para código */
 pre {
-  background-color: #1f2937 !important;
-  color: #f9fafb !important;
+  background-color: #1f2937;
+  color: #f9fafb;
 }
 
 code:not(pre code) {
-  background-color: #f3f4f6 !important;
-  color: #374151 !important;
-  padding: 0.125rem 0.25rem !important;
-  border-radius: 0.25rem !important;
-}
-
-/* Forzar estilo claro en componentes */
-.prose {
-  color: #111827 !important;
-}
-
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4 {
-  color: #111827 !important;
-}
-
-.prose p {
-  color: #4b5563 !important;
+  background-color: #f3f4f6;
+  color: #374151;
 }

@@ -84,7 +84,7 @@ const components = {
     </ol>
   ),
   code: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
-    <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono" {...props}>
+    <code className="px-2 py-1 rounded text-sm font-mono" {...props}>
       {children}
     </code>
   ),

@@ -10,16 +10,20 @@ tags: ["api", "architecture", "web-services"]
 
 **REST API** (Representational State Transfer) es un estilo arquitectónico para diseñar servicios web que utiliza HTTP de manera estandardizada.
 
-## ¿Qué es REST?
+## ¿Qué es REST API?
 
-REST es un conjunto de principios arquitectónicos:
+Imagina que una API es como un **menú de restaurante que te permite pedir comida**, entonces **REST API es un menú muy bien organizado** donde cada plato tiene un nombre claro, precio especificado, y instrucciones precisas sobre cómo pedirlo.
 
-- **Stateless**: Sin estado entre peticiones
-- **Cliente-Servidor**: Separación de responsabilidades
-- **Cacheable**: Respuestas pueden ser cacheadas
-- **Uniform Interface**: Interfaz uniforme
-- **Layered System**: Sistema en capas
-- **Code on Demand**: Código bajo demanda (opcional)
+REST (Representational State Transfer) es un estilo arquitectónico que define reglas claras sobre cómo diseñar APIs web. Es como tener un manual de buenas prácticas que hace que las APIs sean predecibles, organizadas y fáciles de usar.
+
+**REST API te da:**
+- **URLs organizadas y lógicas** - Como `/usuarios/123/pedidos` para ver pedidos del usuario 123
+- **Métodos HTTP claros** - GET para obtener, POST para crear, PUT para actualizar, DELETE para eliminar
+- **Sin dependencias entre peticiones** - Cada petición es independiente, como ordenar platos por separado
+- **Respuestas consistentes** - Siempre sabes qué formato esperar
+- **Fácil de cachear** - Las respuestas se pueden guardar temporalmente para ser más rápido
+
+REST se volvió el estándar porque hace que trabajar con APIs sea intuitivo: si sabes cómo usar una API REST, puedes entender fácilmente otra API REST diferente.
 
 ## Principios REST
 

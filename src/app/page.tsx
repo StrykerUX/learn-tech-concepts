@@ -29,14 +29,14 @@ export default function HomePage() {
     },
     {
       name: 'Herramientas',
-      slug: 'herramientas',
+      slug: 'tools',
       icon: '🔧',
       color: 'bg-gray-50 border-gray-200 text-gray-800',
       count: allTerms.filter(t => t.filePath.startsWith('/tools/')).length
     },
     {
       name: 'Conceptos',
-      slug: 'conceptos',
+      slug: 'concepts',
       icon: '💡',
       color: 'bg-indigo-50 border-indigo-200 text-indigo-800',
       count: allTerms.filter(t => t.filePath.startsWith('/concepts/')).length
@@ -77,7 +77,7 @@ export default function HomePage() {
       {/* Categorías */}
       <section>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Categorías</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
             <Link
               key={category.slug}

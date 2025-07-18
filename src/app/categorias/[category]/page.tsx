@@ -33,13 +33,13 @@ const categoryInfo: Record<string, { name: string; icon: string; description: st
     description: 'Conceptos generales de tecnología, desarrollo de software y metodologías',
     folder: 'general'
   },
-  'herramientas': {
+  'tools': {
     name: 'Herramientas',
     icon: '🔧',
     description: 'Herramientas de desarrollo como Git, Docker, editores y utilidades para programadores',
     folder: 'tools'
   },
-  'conceptos': {
+  'concepts': {
     name: 'Conceptos',
     icon: '💡',
     description: 'Conceptos fundamentales de programación, protocolos web y principios de desarrollo',

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 const categories = [
   {
@@ -27,11 +28,28 @@ const categories = [
     slug: 'general',
     icon: '📚',
     description: 'Conceptos generales de tecnología'
+  },
+  {
+    name: 'Herramientas',
+    slug: 'tools',
+    icon: '🔧',
+    description: 'Herramientas de desarrollo'
+  },
+  {
+    name: 'Conceptos',
+    slug: 'concepts',
+    icon: '💡',
+    description: 'Conceptos fundamentales'
   }
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <aside className="w-64 bg-white shadow-sm border-r border-gray-200 hidden lg:block">
@@ -40,7 +58,7 @@ export default function Sidebar() {
         
         <nav className="space-y-2">
           {categories.map((category) => {
-            const isActive = pathname?.includes(`/categorias/${category.slug}`)
+            const isActive = mounted && pathname?.includes(`/categorias/${category.slug}`)
             
             return (
               <Link
